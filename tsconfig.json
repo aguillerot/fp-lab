@@ -11,6 +11,10 @@
     "skipLibCheck": true,
     "isolatedModules": true,
     "experimentalDecorators": true,
+    "baseUrl": "./",
+    "paths": {
+      "shared-fp": ["projects/shared-fp/src/public-api.ts"]
+    },
     "importHelpers": true,
     "target": "ES2022",
     "module": "preserve"
@@ -28,6 +32,24 @@
     },
     {
       "path": "./tsconfig.spec.json"
+    },
+    {
+      "path": "./projects/shared-fp/tsconfig.lib.json"
+    },
+    {
+      "path": "./projects/shared-fp/tsconfig.spec.json"
+    },
+    {
+      "path": "./projects/fp-analysis/tsconfig.app.json"
+    },
+    {
+      "path": "./projects/fp-analysis/tsconfig.spec.json"
+    },
+    {
+      "path": "./projects/fp-manager/tsconfig.app.json"
+    },
+    {
+      "path": "./projects/fp-manager/tsconfig.spec.json"
     }
   ]
 }

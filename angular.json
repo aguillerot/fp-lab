@@ -3,38 +3,69 @@
   "version": 1,
   "cli": {
     "packageManager": "npm",
-    "schematicCollections": [
-      "angular-eslint"
-    ]
+    "schematicCollections": ["angular-eslint"]
   },
   "newProjectRoot": "projects",
   "projects": {
-    "sigma-fp-decoder": {
+    "shared-fp": {
+      "projectType": "library",
+      "root": "projects/shared-fp",
+      "sourceRoot": "projects/shared-fp/src",
+      "prefix": "lib",
+      "architect": {
+        "build": {
+          "builder": "@angular/build:ng-packagr",
+          "configurations": {
+            "production": {
+              "tsConfig": "projects/shared-fp/tsconfig.lib.prod.json"
+            },
+            "development": {
+              "tsConfig": "projects/shared-fp/tsconfig.lib.json"
+            }
+          },
+          "defaultConfiguration": "production"
+        },
+        "test": {
+          "builder": "@angular/build:unit-test",
+          "options": {
+            "tsConfig": "projects/shared-fp/tsconfig.spec.json"
+          }
+        },
+        "lint": {
+          "builder": "@angular-eslint/builder:lint",
+          "options": {
+            "lintFilePatterns": ["projects/shared-fp/**/*.ts", "projects/shared-fp/**/*.html"],
+            "eslintConfig": "projects/shared-fp/eslint.config.js"
+          }
+        }
+      }
+    },
+    "fp-analysis": {
       "projectType": "application",
       "schematics": {
         "@schematics/angular:component": {
           "style": "scss"
         }
       },
-      "root": "",
-      "sourceRoot": "src",
+      "root": "projects/fp-analysis",
+      "sourceRoot": "projects/fp-analysis/src",
       "prefix": "app",
       "architect": {
         "build": {
           "builder": "@angular/build:application",
           "options": {
-            "browser": "src/main.ts",
-            "tsConfig": "tsconfig.app.json",
+            "browser": "projects/fp-analysis/src/main.ts",
+            "tsConfig": "projects/fp-analysis/tsconfig.app.json",
             "inlineStyleLanguage": "scss",
             "assets": [
               {
                 "glob": "**/*",
-                "input": "public"
+                "input": "projects/fp-analysis/public"
               }
             ],
             "styles": [
-              "src/tailwind.css",
-              "src/styles.scss"
+              "projects/fp-analysis/src/tailwind.css",
+              "projects/fp-analysis/src/styles.scss"
             ]
           },
           "configurations": {
@@ -65,10 +96,10 @@
           "builder": "@angular/build:dev-server",
           "configurations": {
             "production": {
-              "buildTarget": "sigma-fp-decoder:build:production"
+              "buildTarget": "fp-analysis:build:production"
             },
             "development": {
-              "buildTarget": "sigma-fp-decoder:build:development"
+              "buildTarget": "fp-analysis:build:development"
             }
           },
           "defaultConfiguration": "development"
@@ -79,10 +110,84 @@
         "lint": {
           "builder": "@angular-eslint/builder:lint",
           "options": {
-            "lintFilePatterns": [
-              "src/**/*.ts",
-              "src/**/*.html"
+            "lintFilePatterns": ["projects/fp-analysis/**/*.ts", "projects/fp-analysis/**/*.html"],
+            "eslintConfig": "projects/fp-analysis/eslint.config.js"
+          }
+        }
+      }
+    },
+    "fp-manager": {
+      "projectType": "application",
+      "schematics": {
+        "@schematics/angular:component": {
+          "style": "scss"
+        }
+      },
+      "root": "projects/fp-manager",
+      "sourceRoot": "projects/fp-manager/src",
+      "prefix": "app",
+      "architect": {
+        "build": {
+          "builder": "@angular/build:application",
+          "options": {
+            "browser": "projects/fp-manager/src/main.ts",
+            "tsConfig": "projects/fp-manager/tsconfig.app.json",
+            "inlineStyleLanguage": "scss",
+            "assets": [
+              {
+                "glob": "**/*",
+                "input": "projects/fp-manager/public"
+              }
+            ],
+            "styles": [
+              "projects/fp-manager/src/tailwind.css",
+              "projects/fp-manager/src/styles.scss"
             ]
+          },
+          "configurations": {
+            "production": {
+              "budgets": [
+                {
+                  "type": "initial",
+                  "maximumWarning": "500kB",
+                  "maximumError": "1MB"
+                },
+                {
+                  "type": "anyComponentStyle",
+                  "maximumWarning": "4kB",
+                  "maximumError": "8kB"
+                }
+              ],
+              "outputHashing": "all"
+            },
+            "development": {
+              "optimization": false,
+              "extractLicenses": false,
+              "sourceMap": true
+            }
+          },
+          "defaultConfiguration": "production"
+        },
+        "serve": {
+          "builder": "@angular/build:dev-server",
+          "configurations": {
+            "production": {
+              "buildTarget": "fp-manager:build:production"
+            },
+            "development": {
+              "buildTarget": "fp-manager:build:development"
+            }
+          },
+          "defaultConfiguration": "development"
+        },
+        "test": {
+          "builder": "@angular/build:unit-test"
+        },
+        "lint": {
+          "builder": "@angular-eslint/builder:lint",
+          "options": {
+            "lintFilePatterns": ["projects/fp-manager/**/*.ts", "projects/fp-manager/**/*.html"],
+            "eslintConfig": "projects/fp-manager/eslint.config.js"
           }
         }
       }
