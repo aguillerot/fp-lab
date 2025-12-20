@@ -10,7 +10,6 @@ import {
 
 @Component({
   selector: 'app-root',
-  standalone: true,
   imports: [QrScanner, ShutterSpeedPipe, IntervalDurationPipe, KeyValuePipe],
   templateUrl: './app.html',
   changeDetection: ChangeDetectionStrategy.OnPush,

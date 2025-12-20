@@ -8,7 +8,6 @@ function bytesToHexString(bytes: Uint8Array): string {
 
 @Pipe({
   name: 'bytesToHex',
-  standalone: true,
 })
 export class BytesToHexPipe implements PipeTransform {
   transform(byteData: Uint8Array): string {

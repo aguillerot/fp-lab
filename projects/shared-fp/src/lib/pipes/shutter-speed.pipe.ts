@@ -2,7 +2,6 @@ import { Pipe, PipeTransform } from '@angular/core';
 
 @Pipe({
   name: 'shutterSpeed',
-  standalone: true,
 })
 export class ShutterSpeedPipe implements PipeTransform {
   transform(value: unknown): string {

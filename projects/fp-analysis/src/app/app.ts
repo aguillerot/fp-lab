@@ -4,7 +4,6 @@ import { QrAnalysisService } from './services/qr-analysis.service';
 
 @Component({
   selector: 'app-root',
-  standalone: true,
   imports: [QrScanner, HexAtIndexesPipe, BytesToHexPipe],
   templateUrl: './app.html',
   changeDetection: ChangeDetectionStrategy.OnPush,

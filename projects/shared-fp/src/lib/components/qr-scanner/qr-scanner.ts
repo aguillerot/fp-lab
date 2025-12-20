@@ -1,4 +1,13 @@
-import { Component, effect, ElementRef, input, OnDestroy, output, viewChild } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  effect,
+  ElementRef,
+  input,
+  OnDestroy,
+  output,
+  viewChild,
+} from '@angular/core';
 import jsQR from 'jsqr';
 
 @Component({
@@ -6,6 +15,7 @@ import jsQR from 'jsqr';
   imports: [],
   templateUrl: './qr-scanner.html',
   styleUrl: './qr-scanner.scss',
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class QrScanner implements OnDestroy {
   deviceId = input<string>();

@@ -2,7 +2,6 @@ import { Pipe, PipeTransform } from '@angular/core';
 
 @Pipe({
   name: 'hexAtIndexes',
-  standalone: true,
 })
 export class HexAtIndexesPipe implements PipeTransform {
   transform(byteData: Uint8Array, indexes: number[]): string {
