@@ -66,6 +66,4 @@ export interface CameraSettings {
   whiteBalanceMode: WhiteBalanceMode;
   whiteBalanceShiftBA: string;
   whiteBalanceShiftMG: string;
-  // Add other settings as needed
-  [key: string]: any;
 }

@@ -7,10 +7,20 @@ describe('QrScanner', () => {
   let fixture: ComponentFixture<QrScanner>;
 
   beforeEach(async () => {
+    // Mock navigator.mediaDevices for the test environment
+    Object.defineProperty(navigator, 'mediaDevices', {
+      value: {
+        getUserMedia: vi.fn().mockResolvedValue({
+          getTracks: () => [],
+        }),
+      },
+      writable: true,
+      configurable: true,
+    });
+
     await TestBed.configureTestingModule({
-      imports: [QrScanner]
-    })
-    .compileComponents();
+      imports: [QrScanner],
+    }).compileComponents();
 
     fixture = TestBed.createComponent(QrScanner);
     component = fixture.componentInstance;

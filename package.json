@@ -3,8 +3,9 @@
   "version": "0.0.0",
   "scripts": {
     "ng": "ng",
-    "start": "ng serve",
-    "build": "ng build",
+    "start:analysis": "ng serve fp-analysis",
+    "start:manager": "ng serve fp-manager",
+    "build": "ng build fp-analysis && ng build fp-manager",
     "watch": "ng build --watch --configuration development",
     "test": "ng test",
     "lint": "ng lint"
