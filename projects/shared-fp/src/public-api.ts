@@ -2,13 +2,14 @@
  * Public API Surface of shared-fp
  */
 
-export * from './lib/models/camera-settings.model';
-export * from './lib/services/camera-protocol.service';
 export * from './lib/components/qr-scanner/qr-scanner';
+export * from './lib/models/camera-settings.model';
 export * from './lib/pipes/bytes-to-hex.pipe';
 export * from './lib/pipes/hex-at-indexes.pipe';
 export * from './lib/pipes/interval-duration.pipe';
 export * from './lib/pipes/shutter-speed.pipe';
+export * from './lib/services/camera-protocol.service';
+export * from './lib/services/storage.service';
 
 export * from './lib/decoders/ae-metering-mode';
 export * from './lib/decoders/auto-iso-lower-limit';

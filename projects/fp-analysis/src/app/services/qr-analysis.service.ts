@@ -1,18 +1,21 @@
-import { Injectable, signal } from '@angular/core';
+import { inject, Injectable, signal } from '@angular/core';
+import { StorageService } from 'shared-fp';
 import { ScanSet } from '../models/analysis.model';
+
+interface StoredScanSet {
+  bytesDiff: number[];
+  scans: { valueName: string; byteData: number[] }[];
+}
 
 @Injectable({
   providedIn: 'root',
 })
 export class QrAnalysisService {
-  #scanSets = signal(new Map<string, ScanSet>());
-  scanSets = this.#scanSets.asReadonly();
-
+  private readonly storage = inject(StorageService);
   private readonly STORAGE_KEY = 'qrScanSets';
 
-  constructor() {
-    this.loadFromStorage();
-  }
+  readonly #scanSets = signal(this.getScanSetsFromStorage());
+  readonly scanSets = this.#scanSets.asReadonly();
 
   addScan(parameterName: string, valueName: string, qrData: ArrayBuffer): void {
     const current = this.#scanSets();
@@ -64,15 +67,8 @@ export class QrAnalysisService {
   }
 
   private saveToStorage(): void {
-    if (typeof window === 'undefined') return; // SSR guard
     const map = this.#scanSets();
-    const plain: Record<
-      string,
-      {
-        bytesDiff: number[];
-        scans: { valueName: string; byteData: number[] }[];
-      }
-    > = {};
+    const plain: Record<string, StoredScanSet> = {};
     map.forEach((value, key) => {
       plain[key] = {
         bytesDiff: value.bytesDiff,
@@ -82,40 +78,25 @@ export class QrAnalysisService {
         })),
       };
     });
-    try {
-      localStorage.setItem(this.STORAGE_KEY, JSON.stringify(plain));
-    } catch {
-      // Silently ignore storage errors
-    }
+    this.storage.set(this.STORAGE_KEY, plain);
   }
 
-  private loadFromStorage(): void {
-    if (typeof window === 'undefined') return; // SSR guard
-    try {
-      const raw = localStorage.getItem(this.STORAGE_KEY);
-      if (!raw) return;
-      const parsed = JSON.parse(raw) as Record<
-        string,
-        {
-          bytesDiff: number[];
-          scans: { valueName: string; byteData: number[] }[];
-        }
-      >;
-      const restored = new Map<string, ScanSet>();
-      Object.entries(parsed).forEach(([key, val]) => {
-        restored.set(key, {
-          bytesDiff: Array.isArray(val.bytesDiff) ? val.bytesDiff : [],
-          scans: Array.isArray(val.scans)
-            ? val.scans.map((s) => ({
-                valueName: s.valueName,
-                byteData: new Uint8Array(s.byteData),
-              }))
-            : [],
-        });
+  private getScanSetsFromStorage(): Map<string, ScanSet> {
+    const parsed = this.storage.get<Record<string, StoredScanSet>>(this.STORAGE_KEY);
+    if (!parsed) return new Map();
+
+    const restored = new Map<string, ScanSet>();
+    Object.entries(parsed).forEach(([key, val]) => {
+      restored.set(key, {
+        bytesDiff: Array.isArray(val.bytesDiff) ? val.bytesDiff : [],
+        scans: Array.isArray(val.scans)
+          ? val.scans.map((s) => ({
+              valueName: s.valueName,
+              byteData: new Uint8Array(s.byteData),
+            }))
+          : [],
       });
-      this.#scanSets.set(restored);
-    } catch {
-      // Ignore malformed data
-    }
+    });
+    return restored;
   }
 }
