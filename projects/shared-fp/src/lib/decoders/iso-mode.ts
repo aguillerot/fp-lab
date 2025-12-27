@@ -1,4 +1,4 @@
-import { IsoMode } from '../models/camera-settings.model';
+import { IsoMode } from '../models/iso.model';
 
 const INDEX_120 = 120;
 // Manual mode value matches the index (120 / 0x78)

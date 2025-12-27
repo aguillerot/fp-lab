@@ -1,0 +1,147 @@
+<!-- Back Navigation -->
+<nav class="nav">
+  <a mat-icon-button routerLink="/" aria-label="Back to home">
+    <span class="pi pi-chevron-left"></span>
+  </a>
+  <span>Settings Details</span>
+</nav>
+
+@if (settings(); as settings) {
+<p-card>
+  <ng-template #title>{{ settings.shootingModeName || 'Untitled Preset' }}</ng-template>
+  <ng-template #subtitle>
+    Mode: {{ settings.shootingMode }} @if (settings.shootingModeIcon) { · {{ settings.shootingModeIcon }} }
+  </ng-template>
+</p-card>
+
+<!-- Settings Cards -->
+<div class="cards">
+  <!-- ISO Configuration -->
+  <p-card>
+    <ng-template #title>ISO</ng-template>
+    <div class="flex flex-col gap-2">
+      <div class="flex items-center justify-between gap-2">
+        <label for="isoMode">Mode</label>
+        <p-selectbutton
+          id="isoMode"
+          [options]="[{ label: 'Manual', value: IsoMode.Manual}, { label: 'Auto', value: IsoMode.Auto }]"
+          [field]="settingsForm.isoMode"
+        />
+      </div>
+      <p-inputgroup>
+        <p-inputgroup-addon>Sensitivity</p-inputgroup-addon>
+        <p-inputgroup-addon class="flex-1">{{ settings.isoSensitivity }}</p-inputgroup-addon>
+      </p-inputgroup>
+      <p-inputgroup>
+        <p-inputgroup-addon>Step</p-inputgroup-addon>
+        <p-inputgroup-addon class="flex-1">{{ settings.isoStep }}</p-inputgroup-addon>
+      </p-inputgroup>
+    </div>
+    <p-divider />
+    <div class="flex flex-col gap-2">
+      <div class="flex items-center justify-between gap-2">
+        <label for="lowIsoExpansion">Low ISO Expansion</label>
+        <p-selectbutton
+          id="lowIsoExpansion"
+          [options]="[{ label: 'On', value: false}, { label: 'Off', value:true }]"
+          [field]="settingsForm.lowIsoExpansion"
+        />
+      </div>
+      <div class="flex items-center justify-between gap-2">
+        <label for="highIsoExpansion">High ISO Expansion</label>
+        <p-selectbutton
+          id="highIsoExpansion"
+          [options]="[{ label: 'On', value: false}, { label: 'Off', value:true }]"
+          [field]="settingsForm.highIsoExpansion"
+        />
+      </div>
+    </div>
+    <p-divider />
+    <div class="flex flex-col gap-2">
+      <div class="flex items-center justify-between gap-2">
+        <label for="autoIsoLowerLimit">Auto Lower Limit</label>
+        <p-select
+          id="autoIsoLowerLimit"
+          [options]="autoIsoLowerLimitOptions"
+          [field]="settingsForm.autoIsoLowerLimit"
+        />
+      </div>
+      <div class="flex items-center justify-between gap-2">
+        <label for="autoIsoUpperLimit">Auto Upper Limit</label>
+        <p-select
+          id="autoIsoUpperLimit"
+          [options]="autoIsoUpperLimitOptions"
+          [field]="settingsForm.autoIsoUpperLimit"
+        />
+      </div>
+      <p-inputgroup>
+        <p-inputgroup-addon>Shutter Speed Limit</p-inputgroup-addon>
+        <p-inputgroup-addon class="flex-1">{{ settings.autoIsoSlowestShutterLimit | shutterSpeed }}</p-inputgroup-addon>
+      </p-inputgroup>
+    </div>
+  </p-card>
+
+  <!-- Exposure Settings -->
+  <p-card>
+    <ng-template #title>Exposure</ng-template>
+    <div class="stat-list">
+      <div class="stat-item">
+        <span class="stat-label">Compensation</span>
+        <span class="stat-value">{{ settings.exposureCompensation }}</span>
+      </div>
+      <div class="stat-item">
+        <span class="stat-label">Metering</span>
+        <span class="stat-value">{{ settings.aeMeteringMode }}</span>
+      </div>
+    </div>
+  </p-card>
+
+  <!-- Drive Mode -->
+  <p-card>
+    <ng-template #title>Drive</ng-template>
+    <div class="stat-list">
+      <div class="stat-item">
+        <span class="stat-label">Mode</span>
+        <span class="stat-value">{{ settings.driveMode }}</span>
+      </div>
+      @if (settings.driveMode === 'Interval timer') {
+      <div class="stat-item">
+        <span class="stat-label">Times</span>
+        <span class="stat-value">{{ settings.intervalTimerTimes }}</span>
+      </div>
+      <div class="stat-item">
+        <span class="stat-label">Duration</span>
+        <span class="stat-value">{{ settings.intervalTimerDuration | intervalDuration }}</span>
+      </div>
+      }
+    </div>
+  </p-card>
+
+  <!-- White Balance -->
+  <p-card>
+    <ng-template #title>White Balance</ng-template>
+    <div class="stat-list">
+      <div class="stat-item">
+        <span class="stat-label">Mode</span>
+        <span class="stat-value">{{ settings.whiteBalanceMode }}</span>
+      </div>
+      <div class="stat-item">
+        <span class="stat-label">Shift B-A</span>
+        <span class="stat-value">{{ settings.whiteBalanceShiftBA }}</span>
+      </div>
+      <div class="stat-item">
+        <span class="stat-label">Shift M-G</span>
+        <span class="stat-value">{{ settings.whiteBalanceShiftMG }}</span>
+      </div>
+    </div>
+  </p-card>
+</div>
+} @else {
+<!-- Not Found State -->
+<div class="not-found">
+  <span class="pi pi-times-circle"></span>
+  <h2>Settings not found</h2>
+  <p>The settings you are looking for do not exist.</p>
+  <a mat-raised-button color="primary" routerLink="/">Go Back Home</a>
+</div>
+}

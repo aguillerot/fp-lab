@@ -41,13 +41,26 @@ This is an Angular monorepo workspace for decoding and managing Sigma FP camera 
 ## Tech Stack
 
 - **Framework**: Angular 21
-- **UI Components**: Angular Material, Angular CDK
-- **Styling**: Tailwind CSS 4
+- **UI Components**: PrimeNG
+- **Styling**: SCSS with Tailwindcss
 - **QR Code Reading**: jsqr
 - **Testing**: Vitest
 - **Linting**: ESLint with angular-eslint
 - **Language**: TypeScript 5.9
 - **Build System**: Angular CLI
+
+## UI Library: PrimeNG
+
+> **Note Copilot**: For PrimeNG documentation, use `fetch_webpage` with URL: https://primeng.org/llms/llms-full.txt
+
+### Usage Guidelines
+
+- **Do NOT use `provideAnimations()` or `provideAnimationsAsync()`** - both are deprecated since v20.2 (removal in v23). Use `animate.enter`/`animate.leave` directly in templates with CSS classes instead. No animation provider is needed.
+- All components support OnPush change detection
+
+## SCSS Theming
+
+The project uses PrimeNG's theming system with SCSS and Tailwindcss.
 
 ## Code Conventions
 
@@ -56,6 +69,7 @@ This is an Angular monorepo workspace for decoding and managing Sigma FP camera 
 - Use standalone components (Angular 21 default)
 - Use signals for reactive state management
 - Use the `inject()` function for dependency injection
+- Use `styleUrl` instead of inline `styles` in components - extract styles to separate `.scss` files
 - Follow Angular style guide for file naming: `*.component.ts`, `*.service.ts`, `*.pipe.ts`, etc.
 
 ### TypeScript
@@ -66,8 +80,9 @@ This is an Angular monorepo workspace for decoding and managing Sigma FP camera 
 
 ### Styling
 
-- Use Tailwind CSS utility classes
-- Follow mobile-first responsive design
+- Use PrimeNG components for UI
+- Use SCSS for styling with component-scoped styles (`.scss` files)
+- Use PrimeNG theming system for consistent colors
 
 ### Testing
 

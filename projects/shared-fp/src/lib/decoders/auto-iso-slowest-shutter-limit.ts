@@ -91,7 +91,5 @@ function snapToStandardShutterSpeed(value: number): number {
     1 / 8000,
   ];
 
-  return standardSpeeds.reduce((prev, curr) =>
-    Math.abs(curr - value) < Math.abs(prev - value) ? curr : prev,
-  );
+  return standardSpeeds.reduce((prev, curr) => (Math.abs(curr - value) < Math.abs(prev - value) ? curr : prev));
 }

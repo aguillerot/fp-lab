@@ -12,18 +12,9 @@ import {
 } from '../decoders/auto-iso-slowest-shutter-mode';
 import { decodeAutoIsoUpperLimit, encodeAutoIsoUpperLimit } from '../decoders/auto-iso-upper-limit';
 import { decodeDriveMode, encodeDriveMode } from '../decoders/drive-mode';
-import {
-  decodeExposureCompensation,
-  encodeExposureCompensation,
-} from '../decoders/exposure-compensation';
-import {
-  decodeIntervalTimerDuration,
-  encodeIntervalTimerDuration,
-} from '../decoders/interval-timer-duration';
-import {
-  decodeIntervalTimerTimes,
-  encodeIntervalTimerTimes,
-} from '../decoders/interval-timer-times';
+import { decodeExposureCompensation, encodeExposureCompensation } from '../decoders/exposure-compensation';
+import { decodeIntervalTimerDuration, encodeIntervalTimerDuration } from '../decoders/interval-timer-duration';
+import { decodeIntervalTimerTimes, encodeIntervalTimerTimes } from '../decoders/interval-timer-times';
 import { decodeIsoConfiguration, encodeIsoConfiguration } from '../decoders/iso-configuration';
 import { decodeIsoMode, encodeIsoMode } from '../decoders/iso-mode';
 import { decodeIsoSensitivity, encodeIsoSensitivity } from '../decoders/iso-sensitivity';
@@ -31,14 +22,8 @@ import { decodeShootingMode, encodeShootingMode } from '../decoders/shooting-mod
 import { decodeShootingModeIcon, encodeShootingModeIcon } from '../decoders/shooting-mode-icon';
 import { decodeShootingModeName, encodeShootingModeName } from '../decoders/shooting-mode-name';
 import { decodeWhiteBalanceMode, encodeWhiteBalanceMode } from '../decoders/white-balance-mode';
-import {
-  decodeWhiteBalanceShiftBA,
-  encodeWhiteBalanceShiftBA,
-} from '../decoders/white-balance-shift-ba';
-import {
-  decodeWhiteBalanceShiftMG,
-  encodeWhiteBalanceShiftMG,
-} from '../decoders/white-balance-shift-mg';
+import { decodeWhiteBalanceShiftBA, encodeWhiteBalanceShiftBA } from '../decoders/white-balance-shift-ba';
+import { decodeWhiteBalanceShiftMG, encodeWhiteBalanceShiftMG } from '../decoders/white-balance-shift-mg';
 
 @Injectable({
   providedIn: 'root',

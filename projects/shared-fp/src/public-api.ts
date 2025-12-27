@@ -29,3 +29,4 @@ export * from './lib/decoders/shooting-mode-name';
 export * from './lib/decoders/white-balance-mode';
 export * from './lib/decoders/white-balance-shift-ba';
 export * from './lib/decoders/white-balance-shift-mg';
+export * from './lib/utils';

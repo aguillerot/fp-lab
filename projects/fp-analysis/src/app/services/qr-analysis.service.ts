@@ -2,10 +2,10 @@ import { inject, Injectable, signal } from '@angular/core';
 import { StorageService } from 'shared-fp';
 import { ScanSet } from '../models/analysis.model';
 
-interface StoredScanSet {
+type StoredScanSet = {
   bytesDiff: number[];
   scans: { valueName: string; byteData: number[] }[];
-}
+};
 
 @Injectable({
   providedIn: 'root',
@@ -24,7 +24,7 @@ export class QrAnalysisService {
       bytesDiff: existing.bytesDiff,
       scans: [...existing.scans, { byteData: new Uint8Array(qrData), valueName }],
     };
-    scanSet.bytesDiff = this.compareByteArrays(scanSet.scans.map((s) => s.byteData));
+    scanSet.bytesDiff = this.compareByteArrays(scanSet.scans.map(s => s.byteData));
     const updated = new Map(current);
     updated.set(parameterName, scanSet);
     this.#scanSets.set(updated);
@@ -37,12 +37,12 @@ export class QrAnalysisService {
     }
 
     const diffs: number[] = [];
-    const maxLength = Math.max(...data.map((d) => d.length));
+    const maxLength = Math.max(...data.map(d => d.length));
 
     for (let i = 0; i < maxLength; i++) {
       const byteSet = new Set<number>();
-      const bytesAtPosition = data.map((d) => (i < d.length ? d[i] : null));
-      bytesAtPosition.forEach((byte) => {
+      const bytesAtPosition = data.map(d => (i < d.length ? d[i] : null));
+      bytesAtPosition.forEach(byte => {
         if (byte !== null) {
           byteSet.add(byte);
         }
@@ -72,7 +72,7 @@ export class QrAnalysisService {
     map.forEach((value, key) => {
       plain[key] = {
         bytesDiff: value.bytesDiff,
-        scans: value.scans.map((s) => ({
+        scans: value.scans.map(s => ({
           valueName: s.valueName,
           byteData: Array.from(s.byteData),
         })),
@@ -90,7 +90,7 @@ export class QrAnalysisService {
       restored.set(key, {
         bytesDiff: Array.isArray(val.bytesDiff) ? val.bytesDiff : [],
         scans: Array.isArray(val.scans)
-          ? val.scans.map((s) => ({
+          ? val.scans.map(s => ({
               valueName: s.valueName,
               byteData: new Uint8Array(s.byteData),
             }))

@@ -1,0 +1,52 @@
+<p-toast />
+@if (isEmpty()) {
+<!-- Empty State -->
+<div class="empty-state">
+  <!-- <mat-icon>qr_code_2</mat-icon> -->
+  <h2>No saved settings</h2>
+  <p>Scan a QR code from your Sigma FP camera to save and manage your shooting settings.</p>
+  <button mat-fab extended color="primary" (click)="openScanDialog()">
+    <span class="pi pi-qrcode"></span>
+    Scan QR Code
+  </button>
+</div>
+} @else {
+<!-- Settings List -->
+<div class="header">
+  <h2>Saved Settings</h2>
+  <button mat-fab color="primary" (click)="openScanDialog()" aria-label="Scan QR Code">
+    <span class="pi pi-qrcode"></span>
+  </button>
+</div>
+
+<!-- <mat-card>
+    <mat-nav-list>
+      @for (item of storedSettings(); track item.id) {
+        <mat-list-item (click)="openSettings(item)">
+          <div matListItemAvatar class="mode-badge">
+            {{ item.settings.shootingMode }}
+          </div>
+          <span matListItemTitle>
+            {{ item.settings.shootingModeName || 'Untitled Preset' }}
+          </span>
+          <span matListItemLine>
+            @if (item.settings.shootingModeIcon) {
+              {{ item.settings.shootingModeIcon }} ·
+            }
+            {{ item.scannedAt | date: 'MMM d, y' }}
+          </span>
+          <button
+            matListItemMeta
+            mat-icon-button
+            color="warn"
+            (click)="deleteSettings($event, item)"
+            aria-label="Delete"
+          >
+            <mat-icon>delete</mat-icon>
+          </button>
+        </mat-list-item>
+      }
+    </mat-nav-list>
+  </mat-card> -->
+}
+<app-scan-dialog #scanDialog (qrCodeScanned)="handleQrCodeScanned($event)"></app-scan-dialog>

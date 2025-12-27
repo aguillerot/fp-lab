@@ -1,4 +1,4 @@
-import { AutoIsoSlowestShutterMode } from '../models/camera-settings.model';
+import { AutoIsoSlowestShutterMode } from '../models/iso.model';
 
 const INDEX_128 = 128;
 
@@ -31,10 +31,7 @@ export function decodeAutoIsoSlowestShutterMode(data: Uint8Array): AutoIsoSlowes
   }
 }
 
-export function encodeAutoIsoSlowestShutterMode(
-  mode: AutoIsoSlowestShutterMode,
-  data: Uint8Array,
-): void {
+export function encodeAutoIsoSlowestShutterMode(mode: AutoIsoSlowestShutterMode, data: Uint8Array): void {
   if (data.length <= INDEX_128) {
     console.warn('Buffer too short for Auto ISO Slowest Shutter Mode');
     return;

@@ -1,10 +1,43 @@
 {
+  "search.exclude": {
+    "**/node_modules": true,
+    ".nx": true,
+    ".angular": true
+  },
+  "editor.tabSize": 2,
+  "editor.codeActionsOnSave": {
+    "source.fixAll": "explicit"
+  },
+  "editor.formatOnSave": true,
+  "editor.formatOnPaste": true,
+  "editor.defaultFormatter": "esbenp.prettier-vscode",
+  "[typescript]": {
+    "editor.formatOnSave": true,
+    "editor.defaultFormatter": "esbenp.prettier-vscode",
+    "editor.codeActionsOnSave": {
+      "source.organizeImports": "explicit"
+    }
+  },
+  "[javascript]": {
     "editor.formatOnSave": true,
     "editor.defaultFormatter": "esbenp.prettier-vscode"
-    "[typescript]": {
-        "editor.codeActionsOnSave": {
-            "source.organizeImports": "explicit"
-        }
-    },
-    "typescript.tsdk": "node_modules/typescript/lib"
+  },
+  "[html]": {
+    "editor.formatOnSave": true,
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
+  },
+  "[scss]": {
+    "editor.formatOnSave": true,
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
+  },
+  "prettier.enable": true,
+  "files.eol": "\n",
+  "eslint.format.enable": true,
+  "eslint.useFlatConfig": true,
+  "stylelint.validate": ["css", "scss"],
+  "stylelint.reportInvalidScopeDisables": true,
+  "stylelint.reportNeedlessDisables": true,
+  "stylelint.snippet": ["css", "scss"],
+  "stylelint.configFile": "stylelint.config.mjs",
+  "typescript.tsdk": "node_modules/typescript/lib"
 }

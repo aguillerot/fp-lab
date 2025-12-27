@@ -1,9 +1,9 @@
-export interface ScanData {
+export type ScanData = {
   valueName: string;
   byteData: Uint8Array;
-}
+};
 
-export interface ScanSet {
+export type ScanSet = {
   bytesDiff: number[];
   scans: ScanData[];
-}
+};

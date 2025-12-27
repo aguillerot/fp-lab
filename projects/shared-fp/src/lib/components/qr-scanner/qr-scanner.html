@@ -1,22 +1,9 @@
-<div
-  class="fixed inset-0 bg-black bg-opacity-80 flex flex-col items-center justify-center z-50 p-4"
->
-  <div
-    class="relative w-full max-w-2xl aspect-square bg-gray-900 rounded-lg overflow-hidden shadow-2xl border-2 border-gray-700"
-  >
-    <video #videoElement autoplay playsinline class="w-full h-full object-cover"></video>
-    <!-- Hidden canvas for jsQR to process frames from the video -->
-    <canvas #canvasElement class="hidden"></canvas>
-    <div
-      class="absolute inset-0 border-8 border-green-500/50 rounded-lg"
-      style="clip-path: inset(25% 25% 25% 25% round 10px)"
-    ></div>
-    <div class="absolute inset-0" style="box-shadow: 0 0 0 9999px rgba(0, 0, 0, 0.5)"></div>
+<div class="scanner-container">
+  <div class="scanner-viewport">
+    <video #videoElement autoplay playsinline class="scanner-video"></video>
+    <canvas #canvasElement class="scanner-canvas"></canvas>
+    <div class="scanner-overlay">
+      <div class="scanner-frame"></div>
+    </div>
   </div>
-  <button
-    (click)="cancel()"
-    class="mt-6 px-8 py-3 bg-red-600 text-white font-semibold rounded-lg shadow-lg hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-900 focus:ring-red-500 transition-colors"
-  >
-    Cancel Scan
-  </button>
 </div>

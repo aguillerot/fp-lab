@@ -1,0 +1,153 @@
+.app-container {
+  min-height: 100vh;
+  padding: 24px;
+}
+
+.content-wrapper {
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.app-header {
+  text-align: center;
+  margin-bottom: 32px;
+
+  .app-title {
+    font-size: 3rem;
+    font-weight: 700;
+    margin: 0;
+    background: linear-gradient(135deg, #00bcd4, #2196f3);
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+
+  .app-subtitle {
+    font-size: 1.25rem;
+    color: #00bcd4;
+    margin-top: 8px;
+  }
+}
+
+.error-banner {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 16px;
+  margin-bottom: 24px;
+  background-color: rgb(244 67 54 / 10%);
+  border: 1px solid #f44336;
+  border-radius: 8px;
+  color: #f44336;
+
+  mat-icon {
+    flex-shrink: 0;
+  }
+}
+
+.setup-card {
+  margin-bottom: 24px;
+
+  mat-card-header {
+    padding-bottom: 16px;
+  }
+}
+
+.form-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 16px;
+  align-items: flex-start;
+
+  @media (width <= 1024px) {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  @media (width <= 600px) {
+    grid-template-columns: 1fr;
+  }
+}
+
+.scan-button-wrapper {
+  display: flex;
+  align-items: center;
+  height: 56px;
+
+  button {
+    height: 48px;
+    font-size: 1rem;
+
+    mat-icon {
+      margin-right: 8px;
+    }
+  }
+}
+
+.results-section {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+.empty-card {
+  .empty-state {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 48px 24px;
+    text-align: center;
+
+    .empty-icon {
+      font-size: 64px;
+      width: 64px;
+      height: 64px;
+      color: rgb(255 255 255 / 30%);
+      margin-bottom: 16px;
+    }
+
+    h3 {
+      font-size: 1.25rem;
+      margin: 0 0 8px;
+    }
+
+    p {
+      color: rgb(255 255 255 / 50%);
+      margin: 0;
+    }
+  }
+}
+
+.result-card {
+  mat-card-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 16px 16px 0;
+
+    mat-card-title {
+      color: #00bcd4;
+      font-size: 1.25rem;
+    }
+  }
+}
+
+.results-table {
+  width: 100%;
+
+  .changed-bytes {
+    font-family: 'Roboto Mono', monospace;
+    color: #ffab00;
+  }
+
+  .no-change {
+    color: rgb(255 255 255 / 50%);
+    font-style: italic;
+  }
+
+  .raw-data {
+    font-family: 'Roboto Mono', monospace;
+    font-size: 0.75rem;
+    color: rgb(255 255 255 / 50%);
+    word-break: break-all;
+  }
+}

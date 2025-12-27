@@ -1,0 +1,51 @@
+.nav {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 16px;
+}
+
+.cards {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 16px;
+  margin-top: 16px;
+}
+
+.stat-list {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
+  gap: 8px;
+  text-align: center;
+  padding: 8px 0;
+}
+
+.stat-item {
+  padding: 8px;
+  background: rgb(0 0 0 / 10%);
+  border-radius: 8px;
+}
+
+.stat-label {
+  font-size: 0.7rem;
+  opacity: 0.6;
+  display: block;
+}
+
+.stat-value {
+  font-size: 0.9rem;
+  font-weight: 500;
+  color: #00bcd4;
+}
+
+.not-found {
+  text-align: center;
+  padding: 64px 24px;
+
+  mat-icon {
+    font-size: 64px;
+    width: 64px;
+    height: 64px;
+    opacity: 0.5;
+  }
+}

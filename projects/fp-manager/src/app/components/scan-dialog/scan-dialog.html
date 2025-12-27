@@ -1,0 +1,38 @@
+<p-toast />
+<p-dialog
+  [visible]="visible()"
+  (visibleChange)="visible.set($event)"
+  [modal]="true"
+  [style]="{ width: '90vw', maxWith: '500px' }"
+>
+  <ng-template #header>Scan QR Code</ng-template>
+  @if (!visible()) {
+  <!-- Content destroyed when dialog is closed -->
+  } @else if (isLoading()) {
+  <div class="loading">
+    <p-progress-spinner ariaLabel="loading" [style]="{ width: '40px', height: '40px' }" />
+  </div>
+  } @else { @if (availableCameras().length > 1) {
+  <p-select
+    [options]="availableCameras()"
+    [(ngModel)]="selectedCameraId"
+    optionValue="deviceId"
+    optionLabel="label"
+    placeholder="Select a camera"
+    class="w-full md:w-56"
+  />
+  }
+
+  <lib-qr-scanner
+    [deviceId]="selectedCameraId()"
+    (qrCodeScanned)="onQrCodeScanned($event)"
+    (scanCancelled)="cancel()"
+    (scanError)="onScanError($event)"
+  />
+
+  <p class="hint">Point your camera at a Sigma FP QR code</p>
+  }
+  <ng-template #footer>
+    <p-button label="Cancel" [text]="true" severity="secondary" (click)="visible.set(false)" />
+  </ng-template>
+</p-dialog>

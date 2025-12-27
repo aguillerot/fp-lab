@@ -1,24 +1,8 @@
-export enum IsoMode {
-  Auto = 'auto',
-  Manual = 'manual',
-}
-
-export type IsoStep = '1/3 EV' | '1 EV';
+import { AutoIsoSlowestShutterMode, IsoMode, IsoStep } from './iso.model';
 
 export type ShootingMode = 'M' | 'S' | 'A' | 'P';
 
-export type AutoIsoSlowestShutterMode =
-  | 'manual'
-  | 'auto Faster'
-  | 'auto Fast'
-  | 'auto'
-  | 'auto Slow'
-  | 'auto Slower';
-
-export type AeMeteringMode =
-  | 'Evaluative Metering'
-  | 'Center Weighted Average Metering'
-  | 'Spot Metering';
+export type AeMeteringMode = 'Evaluative Metering' | 'Center Weighted Average Metering' | 'Spot Metering';
 
 export type DriveMode =
   | 'Single capture'
@@ -45,7 +29,7 @@ export type WhiteBalanceMode =
   | 'Custom 2'
   | 'Custom 3';
 
-export interface CameraSettings {
+export type CameraSettings = {
   isoMode: IsoMode;
   isoSensitivity: number | 'auto'; // 6, 8, 10... 102400 or 'auto'
   exposureCompensation: number; // -5 to +5
@@ -66,4 +50,10 @@ export interface CameraSettings {
   whiteBalanceMode: WhiteBalanceMode;
   whiteBalanceShiftBA: string;
   whiteBalanceShiftMG: string;
-}
+};
+
+export type StoredCameraSettings = {
+  id: string;
+  scannedAt: number;
+  settings: CameraSettings;
+};

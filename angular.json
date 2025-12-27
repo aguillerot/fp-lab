@@ -35,7 +35,7 @@
           "builder": "@angular-eslint/builder:lint",
           "options": {
             "lintFilePatterns": ["projects/shared-fp/**/*.ts", "projects/shared-fp/**/*.html"],
-            "eslintConfig": "projects/shared-fp/eslint.config.js"
+            "eslintConfig": "projects/shared-fp/eslint.config.mjs"
           }
         }
       }
@@ -63,18 +63,15 @@
                 "input": "projects/fp-analysis/public"
               }
             ],
-            "styles": [
-              "projects/fp-analysis/src/tailwind.css",
-              "projects/fp-analysis/src/styles.scss"
-            ]
+            "styles": ["projects/fp-analysis/src/styles.scss"]
           },
           "configurations": {
             "production": {
               "budgets": [
                 {
                   "type": "initial",
-                  "maximumWarning": "500kB",
-                  "maximumError": "1MB"
+                  "maximumWarning": "1MB",
+                  "maximumError": "2MB"
                 },
                 {
                   "type": "anyComponentStyle",
@@ -111,7 +108,7 @@
           "builder": "@angular-eslint/builder:lint",
           "options": {
             "lintFilePatterns": ["projects/fp-analysis/**/*.ts", "projects/fp-analysis/**/*.html"],
-            "eslintConfig": "projects/fp-analysis/eslint.config.js"
+            "eslintConfig": "projects/fp-analysis/eslint.config.mjs"
           }
         }
       }
@@ -139,18 +136,15 @@
                 "input": "projects/fp-manager/public"
               }
             ],
-            "styles": [
-              "projects/fp-manager/src/tailwind.css",
-              "projects/fp-manager/src/styles.scss"
-            ]
+            "styles": ["projects/fp-manager/src/styles.scss"]
           },
           "configurations": {
             "production": {
               "budgets": [
                 {
                   "type": "initial",
-                  "maximumWarning": "500kB",
-                  "maximumError": "1MB"
+                  "maximumWarning": "1MB",
+                  "maximumError": "2MB"
                 },
                 {
                   "type": "anyComponentStyle",
@@ -187,7 +181,7 @@
           "builder": "@angular-eslint/builder:lint",
           "options": {
             "lintFilePatterns": ["projects/fp-manager/**/*.ts", "projects/fp-manager/**/*.html"],
-            "eslintConfig": "projects/fp-manager/eslint.config.js"
+            "eslintConfig": "projects/fp-manager/eslint.config.mjs"
           }
         }
       }

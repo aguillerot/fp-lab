@@ -14,7 +14,7 @@ import jsQR from 'jsqr';
   selector: 'lib-qr-scanner',
   imports: [],
   templateUrl: './qr-scanner.html',
-  styleUrl: './qr-scanner.scss',
+  styleUrl: './qr-scanner.css',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class QrScanner implements OnDestroy {
@@ -62,7 +62,7 @@ export class QrScanner implements OnDestroy {
       this.animationFrameId = null;
     }
     if (this.stream) {
-      this.stream.getTracks().forEach((track) => track.stop());
+      this.stream.getTracks().forEach(track => track.stop());
       this.stream = null;
     }
   }
