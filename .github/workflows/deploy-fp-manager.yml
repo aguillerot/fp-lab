@@ -34,6 +34,9 @@ jobs:
       - name: Build fp-manager for production
         run: npm run ng build fp-manager -- --base-href /fp-lab/
 
+      - name: Create 404.html for GitHub Pages routing
+        run: cp dist/fp-manager/browser/index.html dist/fp-manager/browser/404.html
+
       - name: Setup Pages
         uses: actions/configure-pages@v5
 
