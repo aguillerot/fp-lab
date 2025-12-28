@@ -38,6 +38,13 @@
   color: #00bcd4;
 }
 
+.submit-container {
+  display: flex;
+  justify-content: flex-end;
+  gap: 8px;
+  margin-top: 24px;
+}
+
 .not-found {
   text-align: center;
   padding: 64px 24px;

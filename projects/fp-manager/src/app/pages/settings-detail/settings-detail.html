@@ -1,10 +1,4 @@
-<!-- Back Navigation -->
-<nav class="nav">
-  <a mat-icon-button routerLink="/" aria-label="Back to home">
-    <span class="pi pi-chevron-left"></span>
-  </a>
-  <span>Settings Details</span>
-</nav>
+<p-breadcrumb [home]="home" [model]="items" />
 
 @if (decodedSettings(); as settings) {
 <!-- Settings Cards -->
@@ -12,15 +6,15 @@
   <p-card>
     <ng-template #title>Exposure</ng-template>
     <div class="flex flex-col gap-2">
-      <div class="flex items-center justify-between gap-2">
+      <div class="flex items-center justify-between gap-2 min-h-8">
         <span>Shooting Name</span>
         <p-chip [label]="settings.shootingModeName" />
       </div>
-      <div class="flex items-center justify-between gap-2">
+      <div class="flex items-center justify-between gap-2 min-h-8">
         <span>Shooting Icon</span>
         <p-chip [label]="settings.shootingModeIcon" />
       </div>
-      <div class="flex items-center justify-between gap-2">
+      <div class="flex items-center justify-between gap-2 min-h-8">
         <label for="shootingMode">Shooting Mode</label>
         <p-selectbutton
           id="shootingMode"
@@ -29,7 +23,15 @@
           unselectable
         />
       </div>
-      <div class="flex items-center justify-between gap-2">
+      <div class="flex items-center justify-between gap-2 min-h-8">
+        <span>Shutter Speed</span>
+        <i class="pi pi-exclamation-triangle" style="font-size: 1.5rem"></i>
+      </div>
+      <div class="flex items-center justify-between gap-2 min-h-8">
+        <span>Aperture</span>
+        <i class="pi pi-exclamation-triangle" style="font-size: 1.5rem"></i>
+      </div>
+      <div class="flex items-center justify-between gap-2 min-h-8">
         <label for="exposureCompensation">Compensation: {{settingsForm.exposure.compensation().value()}}</label>
         <p-slider
           id="exposureCompensation"
@@ -40,7 +42,7 @@
           [field]="settingsForm.exposure.compensation"
         />
       </div>
-      <div class="flex items-center justify-between gap-2">
+      <div class="flex items-center justify-between gap-2 min-h-8">
         <label for="exposureMeteringMode">Metering mode</label>
         <p-select
           id="exposureMeteringMode"
@@ -55,7 +57,7 @@
   <p-card>
     <ng-template #title>ISO</ng-template>
     <div class="flex flex-col gap-2">
-      <div class="flex items-center justify-between gap-2">
+      <div class="flex items-center justify-between gap-2 min-h-8">
         <label for="isoSensitivity">Sensitivity</label>
         <p-select
           id="isoSensitivity"
@@ -64,7 +66,7 @@
           [field]="settingsForm.iso.sensitivity"
         />
       </div>
-      <div class="flex items-center justify-between gap-2">
+      <div class="flex items-center justify-between gap-2 min-h-8">
         <label for="isoSensitivityStep">Step</label>
         <p-selectbutton
           id="isoSensitivityStep"
@@ -76,7 +78,7 @@
     </div>
     <p-divider />
     <div class="flex flex-col gap-2">
-      <div class="flex items-center justify-between gap-2">
+      <div class="flex items-center justify-between gap-2 min-h-8">
         <label for="lowIsoExpansion">Low ISO Expansion</label>
         <p-selectbutton
           id="lowIsoExpansion"
@@ -85,7 +87,7 @@
           unselectable
         />
       </div>
-      <div class="flex items-center justify-between gap-2">
+      <div class="flex items-center justify-between gap-2 min-h-8">
         <label for="highIsoExpansion">High ISO Expansion</label>
         <p-selectbutton
           id="highIsoExpansion"
@@ -97,7 +99,7 @@
     </div>
     <p-divider />
     <div class="flex flex-col gap-2">
-      <div class="flex items-center justify-between gap-2">
+      <div class="flex items-center justify-between gap-2 min-h-8">
         <label for="autoIsoLowerLimit">Auto Lower Limit</label>
         <p-select
           id="autoIsoLowerLimit"
@@ -106,7 +108,7 @@
           [field]="settingsForm.iso.autoLowerLimit"
         />
       </div>
-      <div class="flex items-center justify-between gap-2">
+      <div class="flex items-center justify-between gap-2 min-h-8">
         <label for="autoIsoUpperLimit">Auto Upper Limit</label>
         <p-select
           id="autoIsoUpperLimit"
@@ -115,27 +117,27 @@
           [field]="settingsForm.iso.autoUpperLimit"
         />
       </div>
-      <p-inputgroup>
-        <p-inputgroup-addon>Shutter Speed Limit</p-inputgroup-addon>
-        <p-inputgroup-addon class="flex-1">{{ settings.autoIsoSlowestShutterLimit | shutterSpeed }}</p-inputgroup-addon>
-      </p-inputgroup>
+      <div class="flex items-center justify-between gap-2 min-h-8">
+        <span>Slowest Shutter Speed Limit</span>
+        <i class="pi pi-exclamation-triangle" style="font-size: 1.5rem"></i>
+      </div>
     </div>
   </p-card>
   <p-card>
     <ng-template #title>Drive</ng-template>
-    <div class="stat-list">
-      <div class="stat-item">
-        <span class="stat-label">Mode</span>
-        <span class="stat-value">{{ settings.driveMode }}</span>
+    <div class="flex flex-col gap-2">
+      <div class="flex items-center justify-between gap-2 min-h-8">
+        <label for="driveMode">Mode</label>
+        <p-select id="driveMode" class="min-w-40" [options]="driveModeOptions" [field]="settingsForm.drive.mode" />
       </div>
-      @if (settings.driveMode === 'Interval timer') {
-      <div class="stat-item">
-        <span class="stat-label">Times</span>
-        <span class="stat-value">{{ settings.intervalTimerTimes }}</span>
+      @if (settingsForm.drive.mode().value() === 'Interval timer') {
+      <div class="flex items-center justify-between gap-2 min-h-8">
+        <span>Interval Times</span>
+        <span>{{ settingsForm.drive.intervalTimerTimes().value() }}</span>
       </div>
-      <div class="stat-item">
-        <span class="stat-label">Duration</span>
-        <span class="stat-value">{{ settings.intervalTimerDuration | intervalDuration }}</span>
+      <div class="flex items-center justify-between gap-2 min-h-8">
+        <span>Interval Duration</span>
+        <span>{{ settingsForm.drive.intervalTimerDuration().value() }}s</span>
       </div>
       }
     </div>
@@ -143,7 +145,7 @@
   <p-card>
     <ng-template #title>White Balance</ng-template>
     <div class="flex flex-col gap-2">
-      <div class="flex items-center justify-between gap-2">
+      <div class="flex items-center justify-between gap-2 min-h-8">
         <label for="whiteBalanceMode">Mode</label>
         <p-select
           id="whiteBalanceMode"
@@ -152,7 +154,7 @@
           [field]="settingsForm.whiteBalance.mode"
         />
       </div>
-      <div class="flex items-center justify-between gap-2">
+      <div class="flex items-center justify-between gap-2 min-h-8">
         <label for="whiteBalanceShiftBA"
           >Shift {{settingsForm.whiteBalance.shiftBA().value() | whiteBalanceShiftBA}}</label
         >
@@ -165,7 +167,7 @@
           [field]="settingsForm.whiteBalance.shiftBA"
         />
       </div>
-      <div class="flex items-center justify-between gap-2">
+      <div class="flex items-center justify-between gap-2 min-h-8">
         <label for="whiteBalanceShiftMG"
           >Shift {{settingsForm.whiteBalance.shiftMG().value() | whiteBalanceShiftMG}}</label
         >

@@ -12,12 +12,12 @@ import {
 import { FormsModule } from '@angular/forms';
 import { Field, form } from '@angular/forms/signals';
 import { RouterLink } from '@angular/router';
+import { MenuItem } from 'primeng/api';
+import { Breadcrumb } from 'primeng/breadcrumb';
 import { Button } from 'primeng/button';
 import { Card } from 'primeng/card';
 import { Chip } from 'primeng/chip';
 import { Divider } from 'primeng/divider';
-import { InputGroup } from 'primeng/inputgroup';
-import { InputGroupAddon } from 'primeng/inputgroupaddon';
 import { Select } from 'primeng/select';
 import { SelectButton } from 'primeng/selectbutton';
 import { Slider } from 'primeng/slider';
@@ -34,13 +34,13 @@ import {
   allIsoSensitivityOptions,
   autoAndAllIsoSensitivityOptions,
   CameraProtocolService,
+  DriveMode,
+  driveModeOptions,
   highIsoSensitivityOptions,
-  IntervalDurationPipe,
   isNotNil,
   lowIsoSensitivityOptions,
   ShootingMode,
   shootingModeOptions,
-  ShutterSpeedPipe,
   StoredCameraSettings,
   whiteBalanceModeOptions,
   WhiteBalanceShiftBAPipe,
@@ -65,6 +65,11 @@ type SettingsFormData = {
     compensation: number | null;
     aeMeteringMode: AeMeteringMode | null;
   };
+  drive: {
+    mode: DriveMode | null;
+    intervalTimerTimes: number | 'Infinity' | null;
+    intervalTimerDuration: number | null;
+  };
   whiteBalance: {
     mode: WhiteBalanceMode | null;
     shiftBA: number | null;
@@ -83,15 +88,11 @@ type SelectOption<T> = {
   standalone: true,
   imports: [
     RouterLink,
-    ShutterSpeedPipe,
-    IntervalDurationPipe,
     Button,
     Card,
     Divider,
     Field,
     FormsModule,
-    InputGroup,
-    InputGroupAddon,
     SelectButton,
     Select,
     QrDisplayDialog,
@@ -99,6 +100,7 @@ type SelectOption<T> = {
     Slider,
     WhiteBalanceShiftBAPipe,
     WhiteBalanceShiftMGPipe,
+    Breadcrumb,
   ],
   templateUrl: './settings-detail.html',
   styleUrl: './settings-detail.scss',
@@ -110,10 +112,15 @@ export class SettingsDetail {
   protected IsoMode = IsoMode;
   protected readonly aeMeteringModeOptions = aeMeteringModeOptions;
   protected readonly whiteBalanceModeOptions = whiteBalanceModeOptions;
+  protected readonly driveModeOptions = driveModeOptions;
 
   readonly id = input.required<string>();
 
   private readonly qrDisplayDialog = viewChild<QrDisplayDialog>('qrDisplayDialog');
+
+  protected readonly items: MenuItem[] = [{ label: 'Settings Detail' }];
+
+  protected readonly home: MenuItem = { icon: 'pi pi-home', routerLink: '/' };
 
   readonly storedSettings = computed<StoredCameraSettings | undefined>(() => this.settingsStorage.getById(this.id()));
 
@@ -140,6 +147,11 @@ export class SettingsDetail {
       shootingMode: null,
       compensation: null,
       aeMeteringMode: null,
+    },
+    drive: {
+      mode: null,
+      intervalTimerTimes: null,
+      intervalTimerDuration: null,
     },
     whiteBalance: {
       mode: null,
@@ -185,6 +197,11 @@ export class SettingsDetail {
           shootingMode: settings.shootingMode,
           compensation: settings.exposureCompensation,
           aeMeteringMode: settings.aeMeteringMode,
+        },
+        drive: {
+          mode: settings.driveMode,
+          intervalTimerTimes: settings.intervalTimerTimes,
+          intervalTimerDuration: settings.intervalTimerDuration,
         },
         whiteBalance: {
           mode: settings.whiteBalanceMode,
@@ -242,6 +259,9 @@ export class SettingsDetail {
     }
     if (isNotNil(formValue.exposure.aeMeteringMode)) {
       settings.aeMeteringMode = formValue.exposure.aeMeteringMode;
+    }
+    if (isNotNil(formValue.drive.mode)) {
+      settings.driveMode = formValue.drive.mode;
     }
     const encodedSettings = this.cameraProtocol.encode(
       new Uint8Array(this.storedSettings()?.qrCodeData ?? []),

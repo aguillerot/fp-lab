@@ -13,6 +13,7 @@ export * from './lib/pipes/white-balance-shift-mg.pipe';
 export * from './lib/services/camera-protocol.service';
 export * from './lib/services/storage.service';
 
+export * from './lib/constants/drive.constants';
 export * from './lib/constants/exposure.constants';
 export * from './lib/constants/iso.constants';
 export * from './lib/constants/white-balance.constants';
