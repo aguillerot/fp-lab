@@ -31,9 +31,6 @@ jobs:
       - name: Install dependencies
         run: npm ci
 
-      - name: Build shared-fp library
-        run: npm run ng build shared-fp
-
       - name: Build fp-manager for production
         run: npm run ng build fp-manager -- --base-href /fp-lab/
 
