@@ -2,51 +2,48 @@
 @if (isEmpty()) {
 <!-- Empty State -->
 <div class="empty-state">
-  <!-- <mat-icon>qr_code_2</mat-icon> -->
+  <span class="pi pi-qrcode empty-icon"></span>
   <h2>No saved settings</h2>
   <p>Scan a QR code from your Sigma FP camera to save and manage your shooting settings.</p>
-  <button mat-fab extended color="primary" (click)="openScanDialog()">
-    <span class="pi pi-qrcode"></span>
-    Scan QR Code
-  </button>
+  <p-button label="Scan QR Code" icon="pi pi-qrcode" (onClick)="openScanDialog()" />
 </div>
 } @else {
 <!-- Settings List -->
 <div class="header">
   <h2>Saved Settings</h2>
-  <button mat-fab color="primary" (click)="openScanDialog()" aria-label="Scan QR Code">
-    <span class="pi pi-qrcode"></span>
-  </button>
+  <p-button icon="pi pi-qrcode" (onClick)="openScanDialog()" rounded aria-label="Scan QR Code" />
 </div>
 
-<!-- <mat-card>
-    <mat-nav-list>
-      @for (item of storedSettings(); track item.id) {
-        <mat-list-item (click)="openSettings(item)">
-          <div matListItemAvatar class="mode-badge">
-            {{ item.settings.shootingMode }}
-          </div>
-          <span matListItemTitle>
-            {{ item.settings.shootingModeName || 'Untitled Preset' }}
-          </span>
-          <span matListItemLine>
-            @if (item.settings.shootingModeIcon) {
-              {{ item.settings.shootingModeIcon }} ·
-            }
-            {{ item.scannedAt | date: 'MMM d, y' }}
-          </span>
-          <button
-            matListItemMeta
-            mat-icon-button
-            color="warn"
-            (click)="deleteSettings($event, item)"
-            aria-label="Delete"
-          >
-            <mat-icon>delete</mat-icon>
-          </button>
-        </mat-list-item>
-      }
-    </mat-nav-list>
-  </mat-card> -->
+<p-card>
+  <ul class="settings-list">
+    @for (item of decodedSettings(); track item.id) {
+    <li
+      class="settings-item"
+      tabindex="0"
+      role="button"
+      (click)="openSettings(item)"
+      (keydown.enter)="openSettings(item)"
+      (keydown.space)="openSettings(item)"
+    >
+      <div class="mode-badge">{{ item.decoded.shootingMode }}</div>
+      <div class="settings-info">
+        <span class="settings-title"> {{ item.decoded.shootingModeName || 'Untitled Preset' }} </span>
+        <span class="settings-subtitle">
+          @if (item.decoded.shootingModeIcon) { {{ item.decoded.shootingModeIcon }} · } {{ item.scannedAt | date: 'MMM
+          d, y' }}
+        </span>
+      </div>
+      <p-button
+        icon="pi pi-trash"
+        severity="danger"
+        text
+        rounded
+        (onClick)="deleteSettings($event, item)"
+        aria-label="Delete"
+      />
+    </li>
+    }
+  </ul>
+</p-card>
 }
 <app-scan-dialog #scanDialog (qrCodeScanned)="handleQrCodeScanned($event)"></app-scan-dialog>

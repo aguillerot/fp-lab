@@ -10,8 +10,6 @@ export function decodeWhiteBalanceShiftBA(data: Uint8Array): string {
   const value = data[WB_SHIFT_BA_OFFSET];
   const diff = value - WB_SHIFT_BA_OFFSET;
 
-  console.log({ WB_SHIFT_BA_OFFSET, value, diff });
-
   if (diff === 0) return '0';
   if (diff < 0) return `B${Math.abs(diff)}`;
   return `A${diff}`;

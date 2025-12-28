@@ -52,6 +52,8 @@ export type IsoSensitivity =
   | 80000
   | 102400;
 
+export type IsoSensitivityWithoutAuto = Exclude<IsoSensitivity, 'auto'>;
+
 export type IsoStep = '1/3 EV' | '1 EV';
 
 export type AutoIsoSlowestShutterMode = 'manual' | 'auto Faster' | 'auto Fast' | 'auto' | 'auto Slow' | 'auto Slower';

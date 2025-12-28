@@ -1,5 +1,5 @@
 import { computed, inject, Injectable, signal } from '@angular/core';
-import { CameraSettings, StorageService, StoredCameraSettings } from 'shared-fp';
+import { StorageService, StoredCameraSettings } from 'shared-fp';
 
 const STORAGE_KEY = 'fp-manager-scanned-settings';
 
@@ -14,11 +14,13 @@ export class SettingsStorageService {
   readonly storedSettings = this.storedSettingsSignal.asReadonly();
   readonly isEmpty = computed(() => this.storedSettingsSignal().length === 0);
 
-  save(settings: CameraSettings): StoredCameraSettings {
+  save(qrCodeData: Uint8Array): StoredCameraSettings {
+    const now = Date.now();
     const stored: StoredCameraSettings = {
       id: crypto.randomUUID(),
-      scannedAt: Date.now(),
-      settings,
+      scannedAt: now,
+      modifiedAt: now,
+      qrCodeData: Array.from(qrCodeData),
     };
 
     const current = this.storedSettingsSignal();
@@ -27,6 +29,21 @@ export class SettingsStorageService {
     this.saveToStorage(updated);
 
     return stored;
+  }
+
+  update(id: string, qrCodeData: Uint8Array): void {
+    const current = this.storedSettingsSignal();
+    const updated = current.map(s =>
+      s.id === id
+        ? {
+            ...s,
+            modifiedAt: Date.now(),
+            qrCodeData: Array.from(qrCodeData),
+          }
+        : s,
+    );
+    this.storedSettingsSignal.set(updated);
+    this.saveToStorage(updated);
   }
 
   getById(id: string): StoredCameraSettings | undefined {

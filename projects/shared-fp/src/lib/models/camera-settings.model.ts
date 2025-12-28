@@ -1,4 +1,4 @@
-import { AutoIsoSlowestShutterMode, IsoMode, IsoStep } from './iso.model';
+import { AutoIsoSlowestShutterMode, IsoMode, IsoSensitivity, IsoSensitivityWithoutAuto, IsoStep } from './iso.model';
 
 export type ShootingMode = 'M' | 'S' | 'A' | 'P';
 
@@ -31,13 +31,13 @@ export type WhiteBalanceMode =
 
 export type CameraSettings = {
   isoMode: IsoMode;
-  isoSensitivity: number | 'auto'; // 6, 8, 10... 102400 or 'auto'
+  isoSensitivity: IsoSensitivity;
   exposureCompensation: number; // -5 to +5
   isoStep: IsoStep;
   lowIsoExpansion: boolean;
   highIsoExpansion: boolean;
-  autoIsoLowerLimit: number;
-  autoIsoUpperLimit: number;
+  autoIsoLowerLimit: IsoSensitivityWithoutAuto;
+  autoIsoUpperLimit: IsoSensitivityWithoutAuto;
   autoIsoSlowestShutterMode: AutoIsoSlowestShutterMode;
   autoIsoSlowestShutterLimit: number;
   shootingModeName: string;
@@ -55,5 +55,6 @@ export type CameraSettings = {
 export type StoredCameraSettings = {
   id: string;
   scannedAt: number;
-  settings: CameraSettings;
+  modifiedAt: number;
+  qrCodeData: number[];
 };

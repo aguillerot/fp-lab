@@ -1,6 +1,9 @@
-import { ChangeDetectionStrategy, Component, inject, viewChild } from '@angular/core';
+import { DatePipe } from '@angular/common';
+import { ChangeDetectionStrategy, Component, computed, inject, viewChild } from '@angular/core';
 import { Router } from '@angular/router';
 import { MessageService } from 'primeng/api';
+import { Button } from 'primeng/button';
+import { Card } from 'primeng/card';
 import { Toast } from 'primeng/toast';
 import { CameraProtocolService, StoredCameraSettings } from 'shared-fp';
 import { ScanDialog } from '../../components/scan-dialog/scan-dialog';
@@ -9,7 +12,7 @@ import { SettingsStorageService } from '../../services/settings-storage.service'
 @Component({
   selector: 'app-home',
   standalone: true,
-  imports: [ScanDialog, Toast],
+  imports: [ScanDialog, Toast, Card, Button, DatePipe],
   templateUrl: './home.html',
   styleUrl: './home.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -25,14 +28,24 @@ export class Home {
   readonly storedSettings = this.settingsStorage.storedSettings;
   readonly isEmpty = this.settingsStorage.isEmpty;
 
+  readonly decodedSettings = computed(() =>
+    this.storedSettings().map(item => {
+      const decoded = this.cameraProtocol.decode(new Uint8Array(item.qrCodeData));
+      return {
+        ...item,
+        decoded,
+      };
+    }),
+  );
+
   protected openScanDialog(): void {
     this.scanDialog().open();
   }
 
-  protected handleQrCodeScanned(qrData: ArrayBuffer): void {
+  protected handleQrCodeScanned(buffer: ArrayBuffer): void {
     try {
-      const settings = this.cameraProtocol.decode(new Uint8Array(qrData));
-      const stored = this.settingsStorage.save(settings);
+      const qrCodeData = new Uint8Array(buffer);
+      const stored = this.settingsStorage.save(qrCodeData);
       this.messageService.add({
         severity: 'success',
         summary: 'Success',
@@ -57,6 +70,11 @@ export class Home {
   deleteSettings(event: Event, item: StoredCameraSettings): void {
     event.stopPropagation();
     this.settingsStorage.remove(item.id);
-    // this.snackBar.open('Settings deleted', 'OK', { duration: 2000 });
+    this.messageService.add({
+      severity: 'info',
+      summary: 'Deleted',
+      detail: 'Settings deleted',
+      life: 2000,
+    });
   }
 }

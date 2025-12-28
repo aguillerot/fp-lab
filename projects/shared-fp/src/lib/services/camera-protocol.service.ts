@@ -1,5 +1,4 @@
 import { Injectable } from '@angular/core';
-import { CameraSettings } from '../models/camera-settings.model';
 import { decodeAeMeteringMode, encodeAeMeteringMode } from '../decoders/ae-metering-mode';
 import { decodeAutoIsoLowerLimit, encodeAutoIsoLowerLimit } from '../decoders/auto-iso-lower-limit';
 import {
@@ -24,6 +23,7 @@ import { decodeShootingModeName, encodeShootingModeName } from '../decoders/shoo
 import { decodeWhiteBalanceMode, encodeWhiteBalanceMode } from '../decoders/white-balance-mode';
 import { decodeWhiteBalanceShiftBA, encodeWhiteBalanceShiftBA } from '../decoders/white-balance-shift-ba';
 import { decodeWhiteBalanceShiftMG, encodeWhiteBalanceShiftMG } from '../decoders/white-balance-shift-mg';
+import { CameraSettings } from '../models/camera-settings.model';
 
 @Injectable({
   providedIn: 'root',
@@ -75,14 +75,7 @@ export class CameraProtocolService {
    * @param settings The camera settings to encode.
    * @returns The raw byte data.
    */
-  encode(settings: CameraSettings): Uint8Array {
-    // TODO: Implement actual encoding logic based on the Sigma fp protocol
-    // This is a skeleton implementation
-    console.log('Encoding settings:', settings);
-
-    const bufferSize = 128; // Ensure enough space for byte 119
-    const data = new Uint8Array(bufferSize);
-
+  encode(data: Uint8Array, settings: CameraSettings): Uint8Array {
     encodeExposureCompensation(settings.exposureCompensation, data);
     encodeShootingModeName(settings.shootingModeName, data);
     encodeShootingModeIcon(settings.shootingModeIcon, data);
