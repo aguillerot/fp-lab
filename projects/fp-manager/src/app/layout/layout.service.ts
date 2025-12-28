@@ -1,10 +1,12 @@
 import { computed } from '@angular/core';
-import { rxMethod } from '@ngrx/signals/rxjs-interop';
 import { patchState, signalStore, withComputed, withHooks, withMethods, withState } from '@ngrx/signals';
+import { rxMethod } from '@ngrx/signals/rxjs-interop';
 import { tap } from 'rxjs';
+import { presets } from './configurator/configurator.constants';
+import { KeyOfType } from './configurator/configurator.model';
 
 type LayoutState = {
-  preset: string;
+  preset: KeyOfType<typeof presets>;
   primary: string;
   surface: string | undefined | null;
   isDarkTheme: boolean;
@@ -44,6 +46,26 @@ export const LayoutService = signalStore(
   withMethods(store => {
     const isDesktop = (): boolean => window.innerWidth > 991;
     return {
+      updatePrimary: (primary: string) => {
+        patchState(store, () => ({
+          primary,
+        }));
+      },
+      updateSurface: (surface: string | undefined | null) => {
+        patchState(store, () => ({
+          surface,
+        }));
+      },
+      updatePreset: (preset: KeyOfType<typeof presets>) => {
+        patchState(store, () => ({
+          preset,
+        }));
+      },
+      updateMenuMode: (menuMode: string) => {
+        patchState(store, () => ({
+          menuMode,
+        }));
+      },
       toggleDarkMode: () => {
         patchState(store, ({ isDarkTheme }) => ({
           isDarkTheme: !isDarkTheme,
