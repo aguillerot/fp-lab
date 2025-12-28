@@ -1,0 +1,19 @@
+<p-card>
+  <ng-template #title>Drive</ng-template>
+  <div class="flex flex-col gap-2">
+    <div class="flex items-center justify-between gap-2 min-h-8">
+      <label for="driveMode">Mode</label>
+      <p-select id="driveMode" class="min-w-40" [options]="driveModeOptions" [field]="fieldTree().mode" />
+    </div>
+    @if (fieldTree().mode().value() === 'Interval timer') {
+    <div class="flex items-center justify-between gap-2 min-h-8">
+      <span>Interval Times</span>
+      <span>{{ fieldTree().intervalTimerTimes().value() }}</span>
+    </div>
+    <div class="flex items-center justify-between gap-2 min-h-8">
+      <span>Interval Duration</span>
+      <span>{{ fieldTree().intervalTimerDuration().value() }}s</span>
+    </div>
+    }
+  </div>
+</p-card>

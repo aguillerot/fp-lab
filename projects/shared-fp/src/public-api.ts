@@ -4,6 +4,8 @@
 
 export * from './lib/components/qr-scanner/qr-scanner';
 export * from './lib/models/camera-settings.model';
+export * from './lib/models/iso.model';
+export * from './lib/models/white-balance.model';
 export * from './lib/pipes/bytes-to-hex.pipe';
 export * from './lib/pipes/hex-at-indexes.pipe';
 export * from './lib/pipes/interval-duration.pipe';

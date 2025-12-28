@@ -1,0 +1,50 @@
+<p-card>
+  <ng-template #title>Exposure</ng-template>
+  <div class="flex flex-col gap-2">
+    <div class="flex items-center justify-between gap-2 min-h-8">
+      <span>Shooting Name</span>
+      <p-chip [label]="fieldTree().name().value()" />
+    </div>
+    <div class="flex items-center justify-between gap-2 min-h-8">
+      <span>Shooting Icon</span>
+      <p-chip [label]="fieldTree().icon().value()" />
+    </div>
+    <div class="flex items-center justify-between gap-2 min-h-8">
+      <label for="shootingMode">Shooting Mode</label>
+      <p-selectbutton
+        id="shootingMode"
+        [options]="shootingModeOptions"
+        [field]="fieldTree().shootingMode"
+        unselectable
+      />
+    </div>
+    <div class="flex items-center justify-between gap-2 min-h-8">
+      <span>Shutter Speed</span>
+      <i class="pi pi-exclamation-triangle" style="font-size: 1.5rem"></i>
+    </div>
+    <div class="flex items-center justify-between gap-2 min-h-8">
+      <span>Aperture</span>
+      <i class="pi pi-exclamation-triangle" style="font-size: 1.5rem"></i>
+    </div>
+    <div class="flex items-center justify-between gap-2 min-h-8">
+      <label for="exposureCompensation">Compensation: {{fieldTree().compensation().value()}}</label>
+      <p-slider
+        id="exposureCompensation"
+        class="min-w-40"
+        [min]="-5"
+        [max]="5"
+        [step]="1"
+        [field]="fieldTree().compensation"
+      />
+    </div>
+    <div class="flex items-center justify-between gap-2 min-h-8">
+      <label for="exposureMeteringMode">Metering mode</label>
+      <p-select
+        id="exposureMeteringMode"
+        class="min-w-40"
+        [options]="aeMeteringModeOptions"
+        [field]="fieldTree().aeMeteringMode"
+      />
+    </div>
+  </div>
+</p-card>
