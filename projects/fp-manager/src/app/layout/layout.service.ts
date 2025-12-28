@@ -1,16 +1,21 @@
-import { computed } from '@angular/core';
+import { computed, effect } from '@angular/core';
 import { patchState, signalStore, withComputed, withHooks, withMethods, withState } from '@ngrx/signals';
 import { rxMethod } from '@ngrx/signals/rxjs-interop';
 import { tap } from 'rxjs';
 import { presets } from './configurator/configurator.constants';
 import { KeyOfType } from './configurator/configurator.model';
 
-type LayoutState = {
+const STORAGE_KEY = 'fp-manager-layout';
+
+type PersistedLayoutState = {
   preset: KeyOfType<typeof presets>;
   primary: string;
   surface: string | undefined | null;
   isDarkTheme: boolean;
   menuMode: string;
+};
+
+type LayoutState = PersistedLayoutState & {
   staticMenuDesktopInactive: boolean;
   overlayMenuActive: boolean;
   configSidebarVisible: boolean;
@@ -20,12 +25,28 @@ type LayoutState = {
   _transitionComplete: boolean;
 };
 
-const defaultState = (): LayoutState => ({
+const defaultPersistedState = (): PersistedLayoutState => ({
   preset: 'Aura',
   primary: 'emerald',
   surface: null,
   isDarkTheme: false,
   menuMode: 'static',
+});
+
+const loadPersistedState = (): PersistedLayoutState => {
+  try {
+    const stored = localStorage.getItem(STORAGE_KEY);
+    if (stored) {
+      return { ...defaultPersistedState(), ...JSON.parse(stored) };
+    }
+  } catch {
+    // Ignore parsing errors
+  }
+  return defaultPersistedState();
+};
+
+const defaultState = (): LayoutState => ({
+  ...loadPersistedState(),
   staticMenuDesktopInactive: false,
   overlayMenuActive: false,
   configSidebarVisible: false,
@@ -123,9 +144,28 @@ export const LayoutService = signalStore(
         startViewTransition(isDarkTheme);
       }),
     );
+    const persistState = (): void => {
+      const stateToPersist: PersistedLayoutState = {
+        preset: store.preset(),
+        primary: store.primary(),
+        surface: store.surface(),
+        isDarkTheme: store.isDarkTheme(),
+        menuMode: store.menuMode(),
+      };
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(stateToPersist));
+    };
     return {
       onInit: () => {
         handleDarkModeTransition(store.isDarkTheme);
+        effect(() => {
+          // Track all persisted properties
+          store.preset();
+          store.primary();
+          store.surface();
+          store.isDarkTheme();
+          store.menuMode();
+          persistState();
+        });
       },
     };
   }),
