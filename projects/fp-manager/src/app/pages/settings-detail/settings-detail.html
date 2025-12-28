@@ -7,18 +7,51 @@
 </nav>
 
 @if (decodedSettings(); as settings) {
-<p-card>
-  <p-chip class="!py-0 !pl-0 !pr-4">
-    <span class="bg-primary text-primary-contrast rounded-full w-8 h-8 flex items-center justify-center">
-      {{ settings.shootingModeIcon }}
-    </span>
-    <span class="ml-2 font-medium"> {{ settings.shootingModeName }} </span>
-  </p-chip>
-</p-card>
-
 <!-- Settings Cards -->
 <div class="cards">
-  <!-- ISO Configuration -->
+  <p-card>
+    <ng-template #title>Exposure</ng-template>
+    <div class="flex flex-col gap-2">
+      <div class="flex items-center justify-between gap-2">
+        <span>Shooting Name</span>
+        <p-chip [label]="settings.shootingModeName" />
+      </div>
+      <div class="flex items-center justify-between gap-2">
+        <span>Shooting Icon</span>
+        <p-chip [label]="settings.shootingModeIcon" />
+      </div>
+      <div class="flex items-center justify-between gap-2">
+        <label for="shootingMode">Shooting Mode</label>
+        <p-selectbutton
+          id="shootingMode"
+          [options]="shootingModeOptions"
+          [field]="settingsForm.exposure.shootingMode"
+          unselectable
+        />
+      </div>
+      <div class="flex items-center justify-between gap-2">
+        <label for="exposureCompensation">Compensation: {{settingsForm.exposure.compensation().value()}}</label>
+        <p-slider
+          id="exposureCompensation"
+          class="min-w-40"
+          [min]="-5"
+          [max]="5"
+          [step]="1"
+          [field]="settingsForm.exposure.compensation"
+        />
+      </div>
+      <div class="flex items-center justify-between gap-2">
+        <label for="exposureMeteringMode">Metering mode</label>
+        <p-select
+          id="exposureMeteringMode"
+          class="min-w-40"
+          [options]="aeMeteringModeOptions"
+          [field]="settingsForm.exposure.aeMeteringMode"
+        />
+      </div>
+    </div>
+  </p-card>
+
   <p-card>
     <ng-template #title>ISO</ng-template>
     <div class="flex flex-col gap-2">
@@ -88,35 +121,6 @@
       </p-inputgroup>
     </div>
   </p-card>
-
-  <!-- Exposure Settings -->
-  <p-card>
-    <ng-template #title>Exposure</ng-template>
-    <div class="flex flex-col gap-2">
-      <div class="flex items-center justify-between gap-2">
-        <label for="exposureCompensation">Compensation: {{settingsForm.exposure.compensation().value()}}</label>
-        <p-slider
-          id="exposureCompensation"
-          class="min-w-40"
-          [min]="-5"
-          [max]="5"
-          [step]="1"
-          [field]="settingsForm.exposure.compensation"
-        />
-      </div>
-      <div class="flex items-center justify-between gap-2">
-        <label for="exposureMeteringMode">Metering mode</label>
-        <p-select
-          id="exposureMeteringMode"
-          class="min-w-40"
-          [options]="aeMeteringModeOptions"
-          [field]="settingsForm.exposure.aeMeteringMode"
-        />
-      </div>
-    </div>
-  </p-card>
-
-  <!-- Drive Mode -->
   <p-card>
     <ng-template #title>Drive</ng-template>
     <div class="stat-list">
@@ -136,22 +140,43 @@
       }
     </div>
   </p-card>
-
-  <!-- White Balance -->
   <p-card>
     <ng-template #title>White Balance</ng-template>
-    <div class="stat-list">
-      <div class="stat-item">
-        <span class="stat-label">Mode</span>
-        <span class="stat-value">{{ settings.whiteBalanceMode }}</span>
+    <div class="flex flex-col gap-2">
+      <div class="flex items-center justify-between gap-2">
+        <label for="whiteBalanceMode">Mode</label>
+        <p-select
+          id="whiteBalanceMode"
+          class="min-w-40"
+          [options]="whiteBalanceModeOptions"
+          [field]="settingsForm.whiteBalance.mode"
+        />
       </div>
-      <div class="stat-item">
-        <span class="stat-label">Shift B-A</span>
-        <span class="stat-value">{{ settings.whiteBalanceShiftBA }}</span>
+      <div class="flex items-center justify-between gap-2">
+        <label for="whiteBalanceShiftBA"
+          >Shift {{settingsForm.whiteBalance.shiftBA().value() | whiteBalanceShiftBA}}</label
+        >
+        <p-slider
+          id="whiteBalanceShiftBA"
+          class="min-w-40"
+          [min]="-16"
+          [max]="16"
+          [step]="2"
+          [field]="settingsForm.whiteBalance.shiftBA"
+        />
       </div>
-      <div class="stat-item">
-        <span class="stat-label">Shift M-G</span>
-        <span class="stat-value">{{ settings.whiteBalanceShiftMG }}</span>
+      <div class="flex items-center justify-between gap-2">
+        <label for="whiteBalanceShiftMG"
+          >Shift {{settingsForm.whiteBalance.shiftMG().value() | whiteBalanceShiftMG}}</label
+        >
+        <p-slider
+          id="whiteBalanceShiftMG"
+          class="min-w-40"
+          [min]="-16"
+          [max]="16"
+          [step]="2"
+          [field]="settingsForm.whiteBalance.shiftMG"
+        />
       </div>
     </div>
   </p-card>

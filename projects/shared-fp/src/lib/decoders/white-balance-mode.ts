@@ -1,4 +1,4 @@
-import { WhiteBalanceMode } from '../models/camera-settings.model';
+import { WhiteBalanceMode } from '../models/white-balance.model';
 
 const WHITE_BALANCE_MODE_OFFSET = 206;
 

@@ -27,6 +27,7 @@ import {
   IsoSensitivityWithoutAuto,
   IsoStep,
 } from 'projects/shared-fp/src/lib/models/iso.model';
+import { WhiteBalanceMode } from 'projects/shared-fp/src/lib/models/white-balance.model';
 import {
   AeMeteringMode,
   aeMeteringModeOptions,
@@ -37,8 +38,13 @@ import {
   IntervalDurationPipe,
   isNotNil,
   lowIsoSensitivityOptions,
+  ShootingMode,
+  shootingModeOptions,
   ShutterSpeedPipe,
   StoredCameraSettings,
+  whiteBalanceModeOptions,
+  WhiteBalanceShiftBAPipe,
+  WhiteBalanceShiftMGPipe,
 } from 'shared-fp';
 import { QrDisplayDialog } from '../../components/qr-display-dialog/qr-display-dialog';
 import { SettingsStorageService } from '../../services/settings-storage.service';
@@ -53,8 +59,16 @@ type SettingsFormData = {
     sensitivityStep: IsoStep | null;
   };
   exposure: {
+    name: string | null;
+    icon: string | null;
+    shootingMode: ShootingMode | null;
     compensation: number | null;
     aeMeteringMode: AeMeteringMode | null;
+  };
+  whiteBalance: {
+    mode: WhiteBalanceMode | null;
+    shiftBA: number | null;
+    shiftMG: number | null;
   };
 };
 
@@ -83,6 +97,8 @@ type SelectOption<T> = {
     QrDisplayDialog,
     Chip,
     Slider,
+    WhiteBalanceShiftBAPipe,
+    WhiteBalanceShiftMGPipe,
   ],
   templateUrl: './settings-detail.html',
   styleUrl: './settings-detail.scss',
@@ -93,6 +109,7 @@ export class SettingsDetail {
   private readonly cameraProtocol = inject(CameraProtocolService);
   protected IsoMode = IsoMode;
   protected readonly aeMeteringModeOptions = aeMeteringModeOptions;
+  protected readonly whiteBalanceModeOptions = whiteBalanceModeOptions;
 
   readonly id = input.required<string>();
 
@@ -118,8 +135,16 @@ export class SettingsDetail {
       sensitivityStep: null,
     },
     exposure: {
+      name: null,
+      icon: null,
+      shootingMode: null,
       compensation: null,
       aeMeteringMode: null,
+    },
+    whiteBalance: {
+      mode: null,
+      shiftBA: null,
+      shiftMG: null,
     },
   });
   readonly settingsForm = form(this.settingsFormModel);
@@ -137,6 +162,7 @@ export class SettingsDetail {
   });
   protected readonly autoIsoLowerLimitOptions = allIsoSensitivityOptions;
   protected readonly autoIsoUpperLimitOptions = allIsoSensitivityOptions;
+  protected readonly shootingModeOptions = shootingModeOptions;
 
   constructor() {
     effect(() => {
@@ -144,7 +170,6 @@ export class SettingsDetail {
       if (!settings) {
         return;
       }
-      console.log('stored settings changed', settings);
       this.settingsFormModel.set({
         iso: {
           sensitivity: settings.isoSensitivity,
@@ -155,8 +180,16 @@ export class SettingsDetail {
           sensitivityStep: settings.isoStep,
         },
         exposure: {
+          name: settings.shootingModeName,
+          icon: settings.shootingModeIcon,
+          shootingMode: settings.shootingMode,
           compensation: settings.exposureCompensation,
           aeMeteringMode: settings.aeMeteringMode,
+        },
+        whiteBalance: {
+          mode: settings.whiteBalanceMode,
+          shiftBA: settings.whiteBalanceShiftBA,
+          shiftMG: settings.whiteBalanceShiftMG,
         },
       });
     });

@@ -1,4 +1,5 @@
 import { AutoIsoSlowestShutterMode, IsoMode, IsoSensitivity, IsoSensitivityWithoutAuto, IsoStep } from './iso.model';
+import { WhiteBalanceMode } from './white-balance.model';
 
 export type ShootingMode = 'M' | 'S' | 'A' | 'P';
 
@@ -14,20 +15,6 @@ export type DriveMode =
   | 'Interval timer';
 
 export type IntervalTimerTimes = 'Infinity' | number;
-
-export type WhiteBalanceMode =
-  | 'Auto'
-  | 'Auto light priority'
-  | 'Daylight'
-  | 'Shade'
-  | 'Overcast'
-  | 'Incandescent'
-  | 'Fluorescent'
-  | 'Flash'
-  | 'Color Temperature'
-  | 'Custom 1'
-  | 'Custom 2'
-  | 'Custom 3';
 
 export type CameraSettings = {
   isoMode: IsoMode;
@@ -48,8 +35,8 @@ export type CameraSettings = {
   intervalTimerTimes: IntervalTimerTimes;
   intervalTimerDuration: number; // in seconds
   whiteBalanceMode: WhiteBalanceMode;
-  whiteBalanceShiftBA: string;
-  whiteBalanceShiftMG: string;
+  whiteBalanceShiftBA: number;
+  whiteBalanceShiftMG: number;
 };
 
 export type StoredCameraSettings = {

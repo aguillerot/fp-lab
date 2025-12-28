@@ -8,11 +8,14 @@ export * from './lib/pipes/bytes-to-hex.pipe';
 export * from './lib/pipes/hex-at-indexes.pipe';
 export * from './lib/pipes/interval-duration.pipe';
 export * from './lib/pipes/shutter-speed.pipe';
+export * from './lib/pipes/white-balance-shift-ba.pipe';
+export * from './lib/pipes/white-balance-shift-mg.pipe';
 export * from './lib/services/camera-protocol.service';
 export * from './lib/services/storage.service';
 
 export * from './lib/constants/exposure.constants';
 export * from './lib/constants/iso.constants';
+export * from './lib/constants/white-balance.constants';
 export * from './lib/decoders/ae-metering-mode';
 export * from './lib/decoders/auto-iso-lower-limit';
 export * from './lib/decoders/auto-iso-slowest-shutter-limit';
