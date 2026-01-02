@@ -1,15 +1,11 @@
 name: Deploy fp-manager to GitHub Pages
 
 on:
-  push:
-    branches:
-      - main
   workflow_dispatch:
     inputs:
       version:
         description: 'Version to deploy (e.g., 1.0.0)'
-        required: false
-        default: '0.0.0'
+        required: true
 
 permissions:
   contents: read
@@ -36,23 +32,10 @@ jobs:
       - name: Install dependencies
         run: npm ci
 
-      - name: Get version from latest release tag
-        id: get_version
-        run: |
-          # Use input version if provided, otherwise get from latest release tag
-          if [ -n "${{ github.event.inputs.version }}" ] && [ "${{ github.event.inputs.version }}" != "0.0.0" ]; then
-            VERSION="${{ github.event.inputs.version }}"
-          else
-            VERSION=$(gh release view --json tagName -q .tagName 2>/dev/null | sed 's/^v//' || echo "0.0.0")
-          fi
-          echo "version=$VERSION" >> $GITHUB_OUTPUT
-          echo "Deploying version: $VERSION"
-        env:
-          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-
       - name: Set app version
         run: |
-          VERSION="${{ steps.get_version.outputs.version }}"
+          VERSION="${{ github.event.inputs.version }}"
+          echo "Deploying version: $VERSION"
           sed -i "s/APP_VERSION = '0.0.0'/APP_VERSION = '${VERSION}'/" projects/fp-manager/src/app/version.ts
 
       - name: Build fp-manager for production
