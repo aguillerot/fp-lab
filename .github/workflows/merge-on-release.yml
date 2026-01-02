@@ -12,38 +12,72 @@ permissions:
 jobs:
   create-release-pr:
     runs-on: ubuntu-latest
+    env:
+      GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
     steps:
       - name: Checkout
         uses: actions/checkout@v4
         with:
           fetch-depth: 0
 
-      - name: Create PR from develop to main
+      - name: Create (or reuse) PR from develop to main
         run: |
           VERSION="${{ github.event.release.tag_name }}"
-          gh pr create \
-            --base main \
-            --head develop \
-            --title "Release ${VERSION}" \
-            --body "Automated release PR for ${VERSION}
+          PR_NUMBER=$(gh pr list --base main --head develop --state open --json number --jq '.[0].number')
 
-          This PR was created automatically when release ${VERSION} was published.
+          if [[ -z "$PR_NUMBER" ]]; then
+            gh pr create \
+              --base main \
+              --head develop \
+              --title "Release ${VERSION}" \
+              --body "Automated release PR for ${VERSION}
 
-          ---
-          🚀 After merge, the deploy workflow will be triggered automatically."
-        env:
-          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+            This PR was created automatically when release ${VERSION} was published.
 
-      - name: Merge PR
+            ---
+            After merge, the deploy workflow will be triggered automatically."
+            PR_NUMBER=$(gh pr list --base main --head develop --state open --json number --jq '.[0].number')
+          fi
+
+          if [[ -z "$PR_NUMBER" ]]; then
+            echo "Failed to find or create PR from develop to main." >&2
+            exit 1
+          fi
+
+          echo "PR_NUMBER=$PR_NUMBER" >> "$GITHUB_ENV"
+
+      - name: Enable auto-merge (protected main)
         run: |
-          gh pr merge develop --merge --delete-branch=false
-        env:
-          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          # Auto-merge lets GitHub merge once required checks/conditions are met.
+          # If auto-merge is not enabled in the repo settings, this will fail.
+          gh pr merge "$PR_NUMBER" --merge --auto --delete-branch=false || \
+            gh pr merge "$PR_NUMBER" --merge --delete-branch=false
+
+      - name: Wait for PR to be merged
+        run: |
+          # If branch protection requires approvals and none are granted, this will time out.
+          deadline=$((SECONDS + 900))
+          while (( SECONDS < deadline )); do
+            state=$(gh pr view "$PR_NUMBER" --json state --jq '.state')
+            if [[ "$state" == "MERGED" ]]; then
+              echo "PR $PR_NUMBER merged."
+              exit 0
+            fi
+            if [[ "$state" == "CLOSED" ]]; then
+              echo "PR $PR_NUMBER was closed without merging." >&2
+              exit 1
+            fi
+            echo "PR $PR_NUMBER not merged yet (state: $state). Waiting..."
+            sleep 10
+          done
+
+          echo "Timed out waiting for PR $PR_NUMBER to merge." >&2
+          gh pr view "$PR_NUMBER" --json url,state,mergeable,reviewDecision,statusCheckRollup \
+            --jq '{url,state,mergeable,reviewDecision,statusChecks:(.statusCheckRollup|length)}'
+          exit 1
 
       - name: Trigger deploy workflow
         run: |
           VERSION="${{ github.event.release.tag_name }}"
           VERSION="${VERSION#v}"
           gh workflow run deploy-fp-manager.yml --ref main -f version="$VERSION"
-        env:
-          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
