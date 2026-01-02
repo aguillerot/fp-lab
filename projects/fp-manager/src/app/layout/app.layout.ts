@@ -1,8 +1,8 @@
-import { Component, computed, inject } from '@angular/core';
-import { AppTopbar } from './topbar/app.topbar';
-import { RouterOutlet } from '@angular/router';
 import { NgClass } from '@angular/common';
+import { Component, computed, inject } from '@angular/core';
+import { RouterOutlet } from '@angular/router';
 import { LayoutService } from './layout.service';
+import { AppTopbar } from './topbar/app.topbar';
 
 @Component({
   selector: 'app-layout',

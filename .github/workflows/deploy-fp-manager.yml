@@ -2,6 +2,11 @@ name: Deploy fp-manager to GitHub Pages
 
 on:
   workflow_dispatch:
+    inputs:
+      version:
+        description: 'Version to deploy (e.g., 1.0.0)'
+        required: false
+        default: '0.0.0'
 
 permissions:
   contents: read
@@ -27,6 +32,11 @@ jobs:
 
       - name: Install dependencies
         run: npm ci
+
+      - name: Set app version
+        run: |
+          VERSION="${{ github.event.inputs.version }}"
+          sed -i "s/APP_VERSION = '0.0.0'/APP_VERSION = '${VERSION}'/" projects/fp-manager/src/app/version.ts
 
       - name: Build fp-manager for production
         run: npm run ng build fp-manager -- --base-href /fp-lab/
