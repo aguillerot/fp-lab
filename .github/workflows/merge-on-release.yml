@@ -28,7 +28,7 @@ jobs:
             --body "Automated release PR for ${VERSION}
 
           This PR was created automatically when release ${VERSION} was published.
-          
+
           ---
           🚀 After merge, the deploy workflow will be triggered automatically."
         env:
