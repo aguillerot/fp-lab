@@ -34,16 +34,11 @@ jobs:
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: Enable auto-merge
+      - name: Merge PR
         run: |
-          gh pr merge develop --auto --merge
+          gh pr merge develop --merge --delete-branch=false
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-
-      - name: Wait for PR to merge
-        run: |
-          echo "Waiting for auto-merge to complete..."
-          sleep 30
 
       - name: Trigger deploy workflow
         run: |
