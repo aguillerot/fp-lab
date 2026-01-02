@@ -7,6 +7,7 @@ on:
 permissions:
   contents: write
   pull-requests: write
+  actions: write
 
 jobs:
   create-release-pr:
@@ -36,5 +37,18 @@ jobs:
       - name: Enable auto-merge
         run: |
           gh pr merge develop --auto --merge
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Wait for PR to merge
+        run: |
+          echo "Waiting for auto-merge to complete..."
+          sleep 30
+
+      - name: Trigger deploy workflow
+        run: |
+          VERSION="${{ github.event.release.tag_name }}"
+          VERSION="${VERSION#v}"
+          gh workflow run deploy-fp-manager.yml --ref main -f version="$VERSION"
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
