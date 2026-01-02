@@ -58,12 +58,15 @@ jobs:
           # If branch protection requires approvals and none are granted, this will time out.
           deadline=$((SECONDS + 900))
           while (( SECONDS < deadline )); do
-            merged=$(gh pr view "$PR_NUMBER" --json merged --jq '.merged')
-            if [[ "$merged" == "true" ]]; then
+            state=$(gh pr view "$PR_NUMBER" --json state --jq '.state')
+            if [[ "$state" == "MERGED" ]]; then
               echo "PR $PR_NUMBER merged."
               exit 0
             fi
-            state=$(gh pr view "$PR_NUMBER" --json state --jq '.state')
+            if [[ "$state" == "CLOSED" ]]; then
+              echo "PR $PR_NUMBER was closed without merging." >&2
+              exit 1
+            fi
             echo "PR $PR_NUMBER not merged yet (state: $state). Waiting..."
             sleep 10
           done
