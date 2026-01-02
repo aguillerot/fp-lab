@@ -10,11 +10,7 @@
 
   <div class="layout-topbar-actions">
     <div class="layout-config-menu">
-      <i
-        class="pi pi-info-circle layout-topbar-action cursor-default"
-        [pTooltip]="'Version ' + version"
-        tooltipPosition="bottom"
-      ></i>
+      <span class="text-sm text-surface-500 dark:text-surface-400 px-2 flex items-center">v{{ version }}</span>
       <button type="button" class="layout-topbar-action" (click)="layoutService.toggleDarkMode()">
         <i
           [ngClass]="{ 'pi ': true, 'pi-moon': layoutService.isDarkTheme(), 'pi-sun': !layoutService.isDarkTheme() }"
