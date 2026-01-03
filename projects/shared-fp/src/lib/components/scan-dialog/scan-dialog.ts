@@ -1,15 +1,15 @@
-import { ChangeDetectionStrategy, Component, inject, model, OnInit, output, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, effect, inject, model, output, signal } from '@angular/core';
 import { FormsModule } from '@angular/forms';
+import { MessageService } from 'primeng/api';
 import { Button } from 'primeng/button';
 import { Dialog } from 'primeng/dialog';
 import { ProgressSpinner } from 'primeng/progressspinner';
 import { Select } from 'primeng/select';
-import { QrScanner } from 'shared-fp';
 import { Toast } from 'primeng/toast';
-import { MessageService } from 'primeng/api';
+import { QrScanner } from '../qr-scanner/qr-scanner';
 
 @Component({
-  selector: 'app-scan-dialog',
+  selector: 'lib-scan-dialog',
   standalone: true,
   imports: [FormsModule, QrScanner, Dialog, Button, ProgressSpinner, Select, Toast],
   providers: [MessageService],
@@ -17,21 +17,20 @@ import { MessageService } from 'primeng/api';
   styleUrl: './scan-dialog.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class ScanDialog implements OnInit {
-  readonly qrCodeScanned = output<ArrayBuffer>();
+export class ScanDialog {
+  public readonly visible = model<boolean>(false);
+  public readonly qrCodeScanned = output<ArrayBuffer>();
   private readonly messageService = inject(MessageService);
-  readonly availableCameras = signal<MediaDeviceInfo[]>([]);
-  readonly selectedCameraId = model<string | undefined>(undefined);
-  readonly isLoading = signal(true);
+  protected readonly availableCameras = signal<MediaDeviceInfo[]>([]);
+  protected readonly selectedCameraId = model<string | undefined>(undefined);
+  protected readonly isLoading = signal(true);
 
-  protected readonly visible = signal(false);
-
-  open() {
-    this.visible.set(true);
-  }
-
-  async ngOnInit() {
-    await this.getCameras();
+  constructor() {
+    effect(() => {
+      if (this.visible()) {
+        this.getCameras();
+      }
+    });
   }
 
   private async getCameras() {

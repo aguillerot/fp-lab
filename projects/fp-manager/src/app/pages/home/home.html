@@ -46,4 +46,4 @@
   </ul>
 </p-card>
 }
-<app-scan-dialog #scanDialog (qrCodeScanned)="handleQrCodeScanned($event)"></app-scan-dialog>
+<lib-scan-dialog [(visible)]="scanDialogVisible" (qrCodeScanned)="handleQrCodeScanned($event)"></lib-scan-dialog>
