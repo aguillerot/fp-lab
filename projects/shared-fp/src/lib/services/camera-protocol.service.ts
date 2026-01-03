@@ -1,5 +1,6 @@
 import { Injectable } from '@angular/core';
 import { decodeAeMeteringMode, encodeAeMeteringMode } from '../decoders/ae-metering-mode';
+import { decodeAperture, encodeAperture } from '../decoders/aperture';
 import { decodeAutoIsoLowerLimit, encodeAutoIsoLowerLimit } from '../decoders/auto-iso-lower-limit';
 import {
   decodeAutoIsoSlowestShutterLimit,
@@ -20,6 +21,7 @@ import { decodeIsoSensitivity, encodeIsoSensitivity } from '../decoders/iso-sens
 import { decodeShootingMode, encodeShootingMode } from '../decoders/shooting-mode';
 import { decodeShootingModeIcon, encodeShootingModeIcon } from '../decoders/shooting-mode-icon';
 import { decodeShootingModeName, encodeShootingModeName } from '../decoders/shooting-mode-name';
+import { decodeShutterSpeed, encodeShutterSpeed } from '../decoders/shutter-speed';
 import { decodeWhiteBalanceMode, encodeWhiteBalanceMode } from '../decoders/white-balance-mode';
 import { decodeWhiteBalanceShiftBA, encodeWhiteBalanceShiftBA } from '../decoders/white-balance-shift-ba';
 import { decodeWhiteBalanceShiftMG, encodeWhiteBalanceShiftMG } from '../decoders/white-balance-shift-mg';
@@ -44,6 +46,8 @@ export class CameraProtocolService {
 
     // Example decoding logic (placeholder)
     const settings: CameraSettings = {
+      aperture: decodeAperture(data),
+      shutterSpeed: decodeShutterSpeed(data),
       isoMode: decodeIsoMode(data),
       shootingModeName: decodeShootingModeName(data),
       shootingModeIcon: decodeShootingModeIcon(data),
@@ -76,6 +80,8 @@ export class CameraProtocolService {
    * @returns The raw byte data.
    */
   encode(data: Uint8Array, settings: CameraSettings): Uint8Array {
+    encodeAperture(settings.aperture, data);
+    encodeShutterSpeed(settings.shutterSpeed, data);
     encodeExposureCompensation(settings.exposureCompensation, data);
     encodeShootingModeName(settings.shootingModeName, data);
     encodeShootingModeIcon(settings.shootingModeIcon, data);

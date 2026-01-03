@@ -1,4 +1,6 @@
+import { Aperture } from './aperture.model';
 import { AutoIsoSlowestShutterMode, IsoMode, IsoSensitivity, IsoSensitivityWithoutAuto, IsoStep } from './iso.model';
+import { ShutterSpeed } from './shutter-speed.model';
 import { WhiteBalanceMode } from './white-balance.model';
 
 export type ShootingMode = 'M' | 'S' | 'A' | 'P';
@@ -17,6 +19,8 @@ export type DriveMode =
 export type IntervalTimerTimes = 'Infinity' | number;
 
 export type CameraSettings = {
+  aperture: Aperture;
+  shutterSpeed: ShutterSpeed;
   isoMode: IsoMode;
   isoSensitivity: IsoSensitivity;
   exposureCompensation: number; // -5 to +5

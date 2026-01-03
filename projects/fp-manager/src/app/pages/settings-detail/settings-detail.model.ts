@@ -1,12 +1,14 @@
 import {
   AeMeteringMode,
+  Aperture,
   DriveMode,
   IsoSensitivity,
   IsoSensitivityWithoutAuto,
   IsoStep,
   ShootingMode,
+  ShutterSpeed,
   WhiteBalanceMode,
-} from 'shared-fp';
+} from 'fp-shared/models';
 
 export type SettingsFormData = {
   iso: {
@@ -23,6 +25,8 @@ export type SettingsFormData = {
     shootingMode: ShootingMode;
     compensation: number;
     aeMeteringMode: AeMeteringMode;
+    aperture: Aperture;
+    shutterSpeed: ShutterSpeed;
   };
   drive: {
     mode: DriveMode;
@@ -46,6 +50,8 @@ export const getDefaultSettingsFormData = (): SettingsFormData => ({
     sensitivityStep: '1 EV',
   },
   exposure: {
+    aperture: 'f/2.8',
+    shutterSpeed: '1/125 s',
     name: 'Default',
     icon: 'C1',
     shootingMode: 'M',

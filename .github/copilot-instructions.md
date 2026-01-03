@@ -122,3 +122,140 @@ fp-lab/
 - `ng build shared-fp` - Build shared library
 - `ng test` - Run tests with Vitest
 - `ng lint` - Run ESLint
+
+## Photography Reference (for QR Decoder Development)
+
+This section provides essential photography knowledge for understanding and writing camera settings decoders.
+
+### The Exposure Triangle
+
+Exposure is controlled by three factors that work together:
+
+1. **Aperture (f-stop)** - Controls light through lens opening size
+2. **Shutter Speed** - Controls duration of light exposure
+3. **ISO Sensitivity** - Controls sensor/film sensitivity to light
+
+**Key Principle**: Doubling/halving any one factor equals **1 stop** of light change. These are interchangeable to maintain the same exposure.
+
+### F-Stop (Aperture) Scale
+
+The f-number is the ratio of focal length to aperture diameter: `N = f / D`
+
+**Mathematical basis**: The scale follows powers of √2 (≈ 1.414). Each full stop = √2 multiplier.
+
+```
+Full stops: f/1 → f/1.4 → f/2 → f/2.8 → f/4 → f/5.6 → f/8 → f/11 → f/16 → f/22 → f/32
+Formula:    2^0   2^0.5   2^1   2^1.5   2^2   2^2.5   2^3   2^3.5   2^4    2^4.5   2^5
+```
+
+**Modern cameras use 1/3 stop increments** (most common):
+
+```
+f/2.8 → f/3.2 → f/3.5 → f/4 → f/4.5 → f/5.0 → f/5.6 → f/6.3 → f/7.1 → f/8
+```
+
+**Light relationship**:
+
+- **Lower f-number** = larger aperture = MORE light = shallower depth of field
+- **Higher f-number** = smaller aperture = LESS light = deeper depth of field
+- Light intensity is proportional to `1/N²` (inverse square of f-number)
+
+### ISO Sensitivity Scale
+
+ISO follows a **linear doubling scale** where each doubling = 1 stop more sensitivity.
+
+```
+Full stops: 100 → 200 → 400 → 800 → 1600 → 3200 → 6400 → 12800 → 25600
+```
+
+**1/3 stop ISO scale** (common in modern cameras):
+
+```
+100 → 125 → 160 → 200 → 250 → 320 → 400 → 500 → 640 → 800 → 1000 → 1250 → 1600...
+```
+
+**Key points**:
+
+- Higher ISO = more sensitive = brighter image but more noise
+- ISO 100/200 are typically "base" ISO with best quality
+- Extended ISO ranges (Lo/Hi settings) are often interpolated
+
+### Shutter Speed Scale
+
+Shutter speeds follow a **reciprocal doubling pattern** (each step halves the time = 1 stop less light).
+
+```
+Full stops: 1s → 1/2 → 1/4 → 1/8 → 1/15 → 1/30 → 1/60 → 1/125 → 1/250 → 1/500 → 1/1000
+```
+
+**1/3 stop scale**:
+
+```
+1/30 → 1/40 → 1/50 → 1/60 → 1/80 → 1/100 → 1/125 → 1/160 → 1/200 → 1/250...
+```
+
+**Note**: Some values are rounded for convenience (1/15 instead of 1/16, 1/125 instead of 1/128).
+
+### Exposure Value (EV) System
+
+EV is a single number representing a combination of aperture and shutter speed.
+
+```
+EV = log₂(N²/t) = log₂(N²) - log₂(t)
+```
+
+Where N = f-number, t = exposure time in seconds.
+
+- **EV 0** = f/1 at 1 second
+- Each +1 EV = halving the exposure (1 stop less light)
+- **Sunny 16 rule**: On a sunny day, use f/16 with shutter = 1/ISO (e.g., ISO 100 → 1/100s)
+
+### Exposure Compensation
+
+Measured in EV units (stops):
+
+- **+1 EV** = 2× more light (1 stop brighter)
+- **-1 EV** = ½ light (1 stop darker)
+- Typical range: -5 to +5 EV in 1/3 stop increments
+
+### White Balance Color Temperature
+
+Measured in **Kelvin (K)**:
+
+```
+2000K-3000K = Warm (candlelight, tungsten)
+3200K       = Tungsten/Incandescent
+4000K       = Fluorescent
+5000K-5500K = Daylight/Flash
+6500K       = Cloudy
+7000K-10000K = Shade/Blue sky
+```
+
+**White Balance Shift**: Fine-tuning on two axes:
+
+- **Amber (A) ↔ Blue (B)**: ±9 units typically
+- **Green (G) ↔ Magenta (M)**: ±9 units typically
+
+### Decoder Implementation Tips
+
+When decoding camera QR bytes:
+
+1. **Indexed values**: Many settings use index-based encoding (0, 1, 2...) mapped to actual values
+2. **Signed vs unsigned**: Watch for signed integers (e.g., exposure compensation can be negative)
+3. **Fractional stops**: 1/3 stop scales often use consecutive byte values
+4. **Bit flags**: Some settings pack multiple options into bit fields
+5. **High/Low bytes**: Multi-byte values may be big-endian or little-endian
+
+### Common Encoding Patterns
+
+```typescript
+// Example: ISO might be encoded as index
+const ISO_VALUES = [100, 125, 160, 200, 250, 320, 400, 500, 640, 800, 1000, 1250, 1600, ...];
+const isoValue = ISO_VALUES[byteValue];
+
+// Example: Exposure compensation as signed byte (-15 to +15 for ±5EV in 1/3 stops)
+const evCompensation = (signedByte / 3); // Convert 1/3 stop units to EV
+
+// Example: F-stop encoded as APEX aperture value × 10
+const fNumber = Math.pow(2, byteValue / 20); // AV = log₂(N²), so N = 2^(AV/2)
+```

@@ -1,5 +1,5 @@
 import { inject, Injectable, signal } from '@angular/core';
-import { StorageService } from 'shared-fp';
+import { StorageService } from 'fp-shared/services';
 import { ScanSet } from '../models/analysis.model';
 
 type StoredScanSet = {
