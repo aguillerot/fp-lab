@@ -2,7 +2,7 @@
  * Public API Surface of shared-fp
  */
 
-export * from './lib/components/qr-scanner/qr-scanner';
+export * from './lib/components/scan-dialog/scan-dialog';
 export * from './lib/models/camera-settings.model';
 export * from './lib/models/iso.model';
 export * from './lib/models/white-balance.model';

@@ -13,25 +13,26 @@
     <p-progress-spinner ariaLabel="loading" [style]="{ width: '40px', height: '40px' }" />
   </div>
   } @else { @if (availableCameras().length > 1) {
-  <p-select
-    [options]="availableCameras()"
-    [(ngModel)]="selectedCameraId"
-    optionValue="deviceId"
-    optionLabel="label"
-    placeholder="Select a camera"
-    class="w-full md:w-56"
-  />
-  }
+  <div class="flex flex-col gap-4 items-center">
+    <p-select
+      [options]="availableCameras()"
+      [(ngModel)]="selectedCameraId"
+      optionValue="deviceId"
+      optionLabel="label"
+      placeholder="Select a camera"
+      class="w-full md:w-56"
+    />
 
-  <lib-qr-scanner
-    [deviceId]="selectedCameraId()"
-    (qrCodeScanned)="onQrCodeScanned($event)"
-    (scanCancelled)="cancel()"
-    (scanError)="onScanError($event)"
-  />
+    <lib-qr-scanner
+      [deviceId]="selectedCameraId()"
+      (qrCodeScanned)="onQrCodeScanned($event)"
+      (scanCancelled)="cancel()"
+      (scanError)="onScanError($event)"
+    />
 
-  <p class="hint">Point your camera at a Sigma FP QR code</p>
-  }
+    <p class="hint">Point your camera at a Sigma FP QR code</p>
+  </div>
+  } }
   <ng-template #footer>
     <p-button label="Cancel" [text]="true" severity="secondary" (click)="visible.set(false)" />
   </ng-template>
