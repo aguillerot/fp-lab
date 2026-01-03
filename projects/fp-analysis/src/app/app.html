@@ -1,149 +1,124 @@
-@if (isScanning()) {
-<lib-qr-scanner
-  [deviceId]="selectedCameraId()"
-  (qrCodeScanned)="onQrCodeScanned($event)"
-  (scanCancelled)="cancelScan()"
-  (scanError)="handleScanError($event)"
-/>
-}
+<p-toast />
+<lib-scan-dialog [(visible)]="isScanning" (qrCodeScanned)="onQrCodeScanned($event)"></lib-scan-dialog>
 
 <main class="app-container">
-  <div class="content-wrapper">
+  <div class="content-wrapper flex flex-col gap-4">
     <!-- Header -->
     <header class="app-header">
       <h1 class="app-title">Sigma Fp</h1>
-      <p class="app-subtitle">Protocol Analysis</p>
+      <p class="app-subtitle">Qr Code Analysis</p>
     </header>
 
     <!-- Error Alert -->
     @if (errorMessage(); as msg) {
-    <div class="error-banner">
-      <mat-icon>error</mat-icon>
-      <span>{{ msg }}</span>
-    </div>
+    <p-message severity="error" size="large" icon="pi pi-exclamation-circle">{{ msg }}</p-message>
     }
 
     <!-- Controls Section -->
-    <mat-card class="setup-card">
-      <mat-card-header>
-        <mat-card-title>Analysis Setup</mat-card-title>
-      </mat-card-header>
-      <mat-card-content>
-        <div class="form-grid">
-          <!-- Parameter Name Input -->
-          <mat-form-field appearance="outline">
-            <mat-label>1. Parameter Name</mat-label>
-            <input
-              matInput
-              placeholder="e.g., ISO, Shutter Speed"
-              [ngModel]="parameterName()"
-              (ngModelChange)="parameterName.set($event)"
-            />
-          </mat-form-field>
+    <p-card header="Analysis Setup">
+      <div class="flex flex-col gap-4 mt-4 mb-4">
+        <!-- Parameter Name Input -->
+        <p-iftalabel class="flex-1">
+          <input
+            id="username"
+            pInputText
+            [field]="settingsForm.parameterName"
+            [class.p-invalid]="settingsForm.parameterName().invalid() && settingsForm.parameterName().touched()"
+            class="w-full max-w-90"
+          />
+          <label for="username">Parameter Name</label>
+        </p-iftalabel>
 
-          <!-- Camera Selection -->
-          <mat-form-field appearance="outline">
-            <mat-label>2. Select Camera</mat-label>
-            @if (availableCameras().length > 0) {
-            <mat-select
-              [ngModel]="selectedCameraId()"
-              (ngModelChange)="selectedCameraId.set($event)"
-            >
-              @for (camera of availableCameras(); track camera.deviceId; let i = $index) {
-              <mat-option [value]="camera.deviceId">
-                {{ camera.label || 'Camera ' + (i + 1) }}
-              </mat-option>
-              }
-            </mat-select>
-            } @else {
-            <input matInput disabled placeholder="No cameras found" />
-            }
-          </mat-form-field>
+        <!-- Value Name Input -->
+        <p-iftalabel class="flex-1">
+          <input
+            pInputText
+            id="valueName"
+            [field]="settingsForm.valueName"
+            [class.p-invalid]="settingsForm.valueName().invalid() && settingsForm.valueName().touched()"
+            class="w-full max-w-90"
+          />
+          <label for="valueName">Parameter Value</label>
+        </p-iftalabel>
+      </div>
 
-          <!-- Value Name Input -->
-          <mat-form-field appearance="outline">
-            <mat-label>3. Value for Next Scan</mat-label>
-            <input
-              matInput
-              placeholder="e.g., 100, 200, 1/125s"
-              [ngModel]="valueName()"
-              (ngModelChange)="valueName.set($event)"
-            />
-          </mat-form-field>
-
-          <!-- Scan Button -->
-          <div class="scan-button-wrapper">
-            <button
-              mat-raised-button
-              color="primary"
-              [disabled]="!parameterName().trim() || !valueName().trim()"
-              (click)="startScan()"
-            >
-              <mat-icon>qr_code_scanner</mat-icon>
-              Scan QR Code
-            </button>
-          </div>
-        </div>
-      </mat-card-content>
-    </mat-card>
+      <!-- Scan Button -->
+      <div class="scan-button-wrapper">
+        <p-button
+          label="Scan QR Code"
+          icon="pi pi-qrcode"
+          [disabled]="settingsForm().invalid()"
+          (onClick)="startScan()"
+        />
+      </div>
+    </p-card>
 
     <!-- Results Section -->
     <section class="results-section">
-      @let scanSetsData = this.scanSets();
-      @if (scanSetsData.size === 0) {
-      <mat-card class="empty-card">
-        <mat-card-content>
-          <div class="empty-state">
-            <mat-icon class="empty-icon">inbox</mat-icon>
-            <h3>No Data Yet</h3>
-            <p>Enter a parameter name and scan your first QR code to begin.</p>
+      @let scanSetsData = this.scanSets(); @if (scanSetsData.size === 0) {
+      <p-card class="empty-card" header="No Data Yet">
+        <p>Enter a parameter name and scan your first QR code to begin.</p>
+      </p-card>
+      } @for (scanSet of scanSetsData; track scanSet[0]) { @let paramName = scanSet[0]; @let bytesDiff =
+      scanSet[1].bytesDiff; @let scans = scanSet[1].scans;
+      <p-card class="result-card" [header]="paramName">
+        <ng-template #footer>
+          <div class="flex gap-4 mt-1">
+            <p-button
+              label="Reset Data"
+              icon="pi pi-trash"
+              severity="danger"
+              class="w-full"
+              styleClass="w-full"
+              [text]="true"
+              (onClick)="resetParameter(paramName)"
+            />
           </div>
-        </mat-card-content>
-      </mat-card>
-      }
-      @for (scanSet of scanSetsData; track scanSet[0]) {
-        @let paramName = scanSet[0];
-        @let bytesDiff = scanSet[1].bytesDiff;
-        @let scans = scanSet[1].scans;
-        <mat-card class="result-card">
-          <mat-card-header>
-            <mat-card-title>{{ paramName }}</mat-card-title>
-            <button mat-button color="warn" (click)="resetParameter(paramName)">
-              <mat-icon>delete</mat-icon>
-              Reset Data
-            </button>
-          </mat-card-header>
-          <mat-card-content>
-            <table mat-table [dataSource]="scans" class="results-table">
-              <ng-container matColumnDef="value">
-                <th mat-header-cell *matHeaderCellDef>Value</th>
-                <td mat-cell *matCellDef="let scan"><strong>{{ scan.valueName }}</strong></td>
-              </ng-container>
+        </ng-template>
 
-              <ng-container matColumnDef="changedBytes">
-                <th mat-header-cell *matHeaderCellDef>Changed Bytes ({{ bytesDiff.join(' ') }})</th>
-                <td mat-cell *matCellDef="let scan" class="changed-bytes">
-                  @if (bytesDiff.length === 0) {
-                  <span class="no-change">No change detected</span>
-                  } @else {
-                  {{ scan.byteData | hexAtIndexes : bytesDiff }}
-                  }
-                </td>
-              </ng-container>
-
-              <ng-container matColumnDef="rawData">
-                <th mat-header-cell *matHeaderCellDef>Raw Data (Hex)</th>
-                <td mat-cell *matCellDef="let scan" class="raw-data">
-                  {{ scan.byteData | bytesToHex }}
-                </td>
-              </ng-container>
-
-              <tr mat-header-row *matHeaderRowDef="['value', 'changedBytes', 'rawData']"></tr>
-              <tr mat-row *matRowDef="let row; columns: ['value', 'changedBytes', 'rawData']"></tr>
-            </table>
-          </mat-card-content>
-        </mat-card>
+        <p-table [value]="scans" styleClass="p-datatable-sm p-datatable-striped">
+          <ng-template #header>
+            <tr>
+              <th>Value</th>
+              <th>Changed Bytes ({{ bytesDiff.join(' ') }})</th>
+              <th>Raw Data</th>
+            </tr>
+          </ng-template>
+          <ng-template #body let-scan>
+            <tr>
+              <td><strong>{{ scan.valueName }}</strong></td>
+              <td class="changed-bytes">
+                @if (bytesDiff.length === 0) {
+                <span>No change detected</span>
+                } @else { {{ scan.byteData | hexAtIndexes : bytesDiff }} }
+              </td>
+              <td>
+                <p-button
+                  label="View"
+                  icon="pi pi-eye"
+                  [text]="true"
+                  size="small"
+                  (onClick)="showRawData(scan.byteData)"
+                />
+              </td>
+            </tr>
+          </ng-template>
+        </p-table>
+      </p-card>
       }
     </section>
   </div>
 </main>
+
+<!-- Raw Data Dialog -->
+<p-dialog
+  header="Raw Data (Hex)"
+  [(visible)]="rawDataDialogVisible"
+  [modal]="true"
+  [style]="{ width: '90vw', maxWidth: '600px' }"
+  [dismissableMask]="true"
+>
+  @if (selectedRawData(); as data) {
+  <div class="raw-data-content">{{ data | bytesToHex }}</div>
+  }
+</p-dialog>

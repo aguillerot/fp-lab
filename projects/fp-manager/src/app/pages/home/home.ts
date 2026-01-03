@@ -1,12 +1,11 @@
 import { DatePipe } from '@angular/common';
-import { ChangeDetectionStrategy, Component, computed, inject, viewChild } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, inject, signal } from '@angular/core';
 import { Router } from '@angular/router';
 import { MessageService } from 'primeng/api';
 import { Button } from 'primeng/button';
 import { Card } from 'primeng/card';
 import { Toast } from 'primeng/toast';
-import { CameraProtocolService, StoredCameraSettings } from 'shared-fp';
-import { ScanDialog } from '../../components/scan-dialog/scan-dialog';
+import { CameraProtocolService, ScanDialog, StoredCameraSettings } from 'shared-fp';
 import { SettingsStorageService } from '../../services/settings-storage.service';
 
 @Component({
@@ -23,7 +22,7 @@ export class Home {
   private readonly settingsStorage = inject(SettingsStorageService);
   private readonly cameraProtocol = inject(CameraProtocolService);
   private readonly messageService = inject(MessageService);
-  private readonly scanDialog = viewChild.required<ScanDialog>('scanDialog');
+  protected readonly scanDialogVisible = signal<boolean>(false);
 
   readonly storedSettings = this.settingsStorage.storedSettings;
   readonly isEmpty = this.settingsStorage.isEmpty;
@@ -39,7 +38,7 @@ export class Home {
   );
 
   protected openScanDialog(): void {
-    this.scanDialog().open();
+    this.scanDialogVisible.set(true);
   }
 
   protected handleQrCodeScanned(buffer: ArrayBuffer): void {
