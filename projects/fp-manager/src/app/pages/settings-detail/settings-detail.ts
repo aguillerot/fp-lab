@@ -2,10 +2,11 @@ import { ChangeDetectionStrategy, Component, computed, effect, inject, input, si
 import { FormsModule } from '@angular/forms';
 import { form } from '@angular/forms/signals';
 import { RouterLink } from '@angular/router';
+import { isAutoIsoSlowestShutterMode, IsoMode, StoredCameraSettings } from 'fp-shared/models';
+import { CameraProtocolService } from 'fp-shared/services';
 import { MenuItem } from 'primeng/api';
 import { Breadcrumb } from 'primeng/breadcrumb';
 import { Button } from 'primeng/button';
-import { CameraProtocolService, IsoMode, StoredCameraSettings } from 'shared-fp';
 import { QrDisplayDialog } from '../../components/qr-display-dialog/qr-display-dialog';
 import { SettingsStorageService } from '../../services/settings-storage.service';
 import { DriveSettingsComponent } from './drive/drive';
@@ -37,7 +38,7 @@ export class SettingsDetail {
   private readonly cameraProtocol = inject(CameraProtocolService);
   readonly id = input.required<string>();
 
-  private readonly qrDisplayDialog = viewChild<QrDisplayDialog>('qrDisplayDialog');
+  private readonly qrDisplayDialog = viewChild.required<QrDisplayDialog>('qrDisplayDialog');
 
   protected readonly items: MenuItem[] = [{ label: 'Settings Detail' }];
 
@@ -70,8 +71,14 @@ export class SettingsDetail {
           autoLowerLimit: settings.autoIsoLowerLimit,
           autoUpperLimit: settings.autoIsoUpperLimit,
           sensitivityStep: settings.isoStep,
+          autoIsoSlowestShutter:
+            settings.autoIsoSlowestShutterMode === 'Manual'
+              ? settings.autoIsoSlowestShutterLimit
+              : settings.autoIsoSlowestShutterMode,
         },
         exposure: {
+          aperture: settings.aperture,
+          shutterSpeed: settings.shutterSpeed,
           name: settings.shootingModeName,
           icon: settings.shootingModeIcon,
           shootingMode: settings.shootingMode,
@@ -93,7 +100,7 @@ export class SettingsDetail {
   }
 
   showQrCode(): void {
-    this.qrDisplayDialog()?.open();
+    this.qrDisplayDialog().visible.set(true);
   }
 
   onSubmit(): void {
@@ -103,6 +110,8 @@ export class SettingsDetail {
       console.warn('No decoded settings available');
       return;
     }
+    settings.aperture = formValue.exposure.aperture;
+    settings.shutterSpeed = formValue.exposure.shutterSpeed;
     settings.isoMode = formValue.iso.sensitivity === 'auto' ? IsoMode.Auto : IsoMode.Manual;
     settings.isoSensitivity = formValue.iso.sensitivity;
     settings.lowIsoExpansion = formValue.iso.lowExpansion;
@@ -110,6 +119,14 @@ export class SettingsDetail {
     settings.autoIsoLowerLimit = formValue.iso.autoLowerLimit;
     settings.autoIsoUpperLimit = formValue.iso.autoUpperLimit;
     settings.isoStep = formValue.iso.sensitivityStep;
+
+    const autoIsoSlowestShutter = formValue.iso.autoIsoSlowestShutter;
+    if (isAutoIsoSlowestShutterMode(autoIsoSlowestShutter)) {
+      settings.autoIsoSlowestShutterMode = autoIsoSlowestShutter;
+    } else {
+      settings.autoIsoSlowestShutterMode = 'Manual';
+      settings.autoIsoSlowestShutterLimit = autoIsoSlowestShutter;
+    }
     settings.exposureCompensation = formValue.exposure.compensation;
     settings.aeMeteringMode = formValue.exposure.aeMeteringMode;
     settings.driveMode = formValue.drive.mode;

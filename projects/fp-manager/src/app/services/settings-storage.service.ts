@@ -1,5 +1,6 @@
 import { computed, inject, Injectable, signal } from '@angular/core';
-import { StorageService, StoredCameraSettings } from 'shared-fp';
+import { StoredCameraSettings } from 'fp-shared/models';
+import { StorageService } from 'fp-shared/services';
 
 const STORAGE_KEY = 'fp-manager-scanned-settings';
 
@@ -48,6 +49,25 @@ export class SettingsStorageService {
 
   getById(id: string): StoredCameraSettings | undefined {
     return this.storedSettingsSignal().find(s => s.id === id);
+  }
+
+  duplicate(id: string): StoredCameraSettings | undefined {
+    const original = this.getById(id);
+    if (!original) return undefined;
+
+    const now = Date.now();
+    const duplicated: StoredCameraSettings = {
+      ...original,
+      id: crypto.randomUUID(),
+      modifiedAt: now,
+    };
+
+    const current = this.storedSettingsSignal();
+    const updated = [duplicated, ...current];
+    this.storedSettingsSignal.set(updated);
+    this.saveToStorage(updated);
+
+    return duplicated;
   }
 
   remove(id: string): void {

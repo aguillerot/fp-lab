@@ -13,7 +13,12 @@
     "experimentalDecorators": true,
     "baseUrl": "./",
     "paths": {
-      "shared-fp": ["projects/shared-fp/src/public-api.ts"]
+      "fp-shared/components": ["projects/shared-fp/src/lib/components/index.ts"],
+      "fp-shared/constants": ["projects/shared-fp/src/lib/constants/index.ts"],
+      "fp-shared/models": ["projects/shared-fp/src/lib/models/index.ts"],
+      "fp-shared/pipes": ["projects/shared-fp/src/lib/pipes/index.ts"],
+      "fp-shared/services": ["projects/shared-fp/src/lib/services/index.ts"],
+      "fp-shared/utils": ["projects/shared-fp/src/lib/utils.ts"]
     },
     "importHelpers": true,
     "target": "ES2022",

@@ -1,4 +1,4 @@
-import { DriveMode } from 'shared-fp';
+import { DriveMode } from 'fp-shared/models';
 
 export const driveModeOptions: DriveMode[] = [
   'Single capture',

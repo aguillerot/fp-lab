@@ -1,17 +1,15 @@
 import { ChangeDetectionStrategy, Component, effect, inject, model, output, signal } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { MessageService } from 'primeng/api';
-import { Button } from 'primeng/button';
 import { Dialog } from 'primeng/dialog';
 import { ProgressSpinner } from 'primeng/progressspinner';
 import { Select } from 'primeng/select';
-import { Toast } from 'primeng/toast';
 import { QrScanner } from '../qr-scanner/qr-scanner';
 
 @Component({
   selector: 'lib-scan-dialog',
   standalone: true,
-  imports: [FormsModule, QrScanner, Dialog, Button, ProgressSpinner, Select, Toast],
+  imports: [FormsModule, QrScanner, Dialog, ProgressSpinner, Select],
   providers: [MessageService],
   templateUrl: './scan-dialog.html',
   styleUrl: './scan-dialog.scss',

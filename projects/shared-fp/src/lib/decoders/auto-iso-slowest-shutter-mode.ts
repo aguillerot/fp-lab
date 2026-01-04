@@ -5,7 +5,7 @@ const INDEX_128 = 128;
 export function decodeAutoIsoSlowestShutterMode(data: Uint8Array): AutoIsoSlowestShutterMode {
   if (data.length <= INDEX_128) {
     console.warn('Buffer too short for Auto ISO Slowest Shutter Mode');
-    return 'auto'; // Default fallback
+    return 'Auto'; // Default fallback
   }
 
   // Golden Rule: value = data[index] - index
@@ -14,20 +14,20 @@ export function decodeAutoIsoSlowestShutterMode(data: Uint8Array): AutoIsoSlowes
 
   switch (value) {
     case 0:
-      return 'manual';
+      return 'Manual';
     case 1:
-      return 'auto Faster';
+      return 'Auto Faster';
     case 2:
-      return 'auto Fast';
+      return 'Auto Fast';
     case 3:
-      return 'auto';
+      return 'Auto';
     case 4:
-      return 'auto Slow';
+      return 'Auto Slow';
     case 5:
-      return 'auto Slower';
+      return 'Auto Slower';
     default:
       console.warn(`Unknown Auto ISO Slowest Shutter Mode value: ${value}`);
-      return 'auto';
+      return 'Auto';
   }
 }
 
@@ -39,22 +39,22 @@ export function encodeAutoIsoSlowestShutterMode(mode: AutoIsoSlowestShutterMode,
 
   let value = 3; // Default 'Auto'
   switch (mode) {
-    case 'manual':
+    case 'Manual':
       value = 0;
       break;
-    case 'auto Faster':
+    case 'Auto Faster':
       value = 1;
       break;
-    case 'auto Fast':
+    case 'Auto Fast':
       value = 2;
       break;
-    case 'auto':
+    case 'Auto':
       value = 3;
       break;
-    case 'auto Slow':
+    case 'Auto Slow':
       value = 4;
       break;
-    case 'auto Slower':
+    case 'Auto Slower':
       value = 5;
       break;
   }

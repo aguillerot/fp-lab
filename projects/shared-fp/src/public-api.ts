@@ -3,6 +3,7 @@
  */
 
 export * from './lib/components/scan-dialog/scan-dialog';
+export * from './lib/models/aperture.model';
 export * from './lib/models/camera-settings.model';
 export * from './lib/models/iso.model';
 export * from './lib/models/white-balance.model';
@@ -20,6 +21,7 @@ export * from './lib/constants/exposure.constants';
 export * from './lib/constants/iso.constants';
 export * from './lib/constants/white-balance.constants';
 export * from './lib/decoders/ae-metering-mode';
+export * from './lib/decoders/aperture';
 export * from './lib/decoders/auto-iso-lower-limit';
 export * from './lib/decoders/auto-iso-slowest-shutter-limit';
 export * from './lib/decoders/auto-iso-slowest-shutter-mode';
@@ -34,6 +36,7 @@ export * from './lib/decoders/iso-sensitivity';
 export * from './lib/decoders/shooting-mode';
 export * from './lib/decoders/shooting-mode-icon';
 export * from './lib/decoders/shooting-mode-name';
+export * from './lib/decoders/shutter-speed';
 export * from './lib/decoders/white-balance-mode';
 export * from './lib/decoders/white-balance-shift-ba';
 export * from './lib/decoders/white-balance-shift-mg';
