@@ -62,8 +62,13 @@
       />
     </div>
     <div class="flex items-center justify-between gap-2 min-h-8">
-      <span>Slowest Shutter Speed Limit</span>
-      <i class="pi pi-exclamation-triangle" style="font-size: 1.5rem"></i>
+      <label for="autoIsoSlowestShutterLimit">Slowest Shutter Speed Limit</label>
+      <p-select
+        id="autoIsoSlowestShutterLimit"
+        class="min-w-40"
+        [options]="slowestIsoShutterSpeedOptions"
+        [field]="fieldTree().autoIsoSlowestShutter"
+      />
     </div>
   </div>
 </p-card>

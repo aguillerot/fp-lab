@@ -67,26 +67,6 @@ const STANDARD_APERTURES: Aperture[] = [
   'f/22',
 ];
 
-// Known aperture byte mappings from QR code analysis
-// Format: [byte116 (hex), byte117 (hex)] -> aperture value
-// Byte 116 and 117 follow the "Golden Rule" offset pattern
-const KNOWN_APERTURES = new Map<string, Aperture>([
-  ['6C-77', 'f/2.8'], // 0x6C=108, 0x77=119
-  ['CF-78', 'f/3.2'], // 0xCF=207, 0x78=120
-  ['11-78', 'f/3.5'], // 0x11=17,  0x78=120
-  ['74-79', 'f/4.0'], // 0x74=116, 0x79=121
-  ['5F-7D', 'f/22'], // 0x5F=95,  0x7D=125
-]);
-
-// Reverse map for encoding
-const APERTURE_TO_BYTES = new Map<Aperture, [number, number]>([
-  ['f/2.8', [0x6c, 0x77]],
-  ['f/3.2', [0xcf, 0x78]],
-  ['f/3.5', [0x11, 0x78]],
-  ['f/4.0', [0x74, 0x79]],
-  ['f/22', [0x5f, 0x7d]],
-]);
-
 /**
  * Decodes aperture value from QR code data.
  *

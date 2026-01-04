@@ -1,5 +1,5 @@
 import { ShutterSpeed } from 'fp-shared/models';
-import { IsoSensitivity, IsoStep } from '../models/iso.model';
+import { AutoIsoSlowestShutterMode, IsoSensitivity, IsoStep } from '../models/iso.model';
 
 export const standardIsoSensitivityOptions: IsoSensitivity[] = [
   100, 125, 160, 200, 250, 320, 400, 500, 640, 800, 1000, 1250, 1600, 2000, 2500, 3200, 4000, 5000, 6400, 8000, 10000,
@@ -21,22 +21,15 @@ export const autoAndAllIsoSensitivityOptions: IsoSensitivity[] = [
 
 export const isoSensitivityStepOptions: IsoStep[] = ['1/3 EV', '1 EV'];
 
-export const slowestIsoShutterSpeedLimitOptions: ShutterSpeed[] = [
-  '30 s',
-  '25 s',
-  '20 s',
-  '15 s',
-  '13 s',
-  '10 s',
-  '8 s',
-  '6 s',
-  '5 s',
-  '4 s',
-  '3.2 s',
-  '2.5 s',
-  '2 s',
-  '1.6 s',
-  '1.3 s',
+export const slowestIsoShutterSpeedModeOptions: AutoIsoSlowestShutterMode[] = [
+  'Auto Faster',
+  'Auto Fast',
+  'Auto',
+  'Auto Slow',
+  'Auto Slower',
+];
+
+export const slowestIsoShutterSpeedLimitOptions: (ShutterSpeed | AutoIsoSlowestShutterMode)[] = [
   '1 s',
   '0.8 s',
   '0.6 s',
@@ -77,4 +70,9 @@ export const slowestIsoShutterSpeedLimitOptions: ShutterSpeed[] = [
   '1/5000 s',
   '1/6000 s',
   '1/8000 s',
+];
+
+export const slowestIsoShutterSpeedOptions: (ShutterSpeed | AutoIsoSlowestShutterMode)[] = [
+  ...slowestIsoShutterSpeedModeOptions,
+  ...slowestIsoShutterSpeedLimitOptions,
 ];

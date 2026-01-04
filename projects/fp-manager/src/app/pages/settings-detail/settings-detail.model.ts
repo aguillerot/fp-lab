@@ -1,6 +1,7 @@
 import {
   AeMeteringMode,
   Aperture,
+  AutoIsoSlowestShutterMode,
   DriveMode,
   IsoSensitivity,
   IsoSensitivityWithoutAuto,
@@ -18,6 +19,7 @@ export type SettingsFormData = {
     autoLowerLimit: IsoSensitivityWithoutAuto;
     autoUpperLimit: IsoSensitivityWithoutAuto;
     sensitivityStep: IsoStep;
+    autoIsoSlowestShutter: AutoIsoSlowestShutterMode | ShutterSpeed;
   };
   exposure: {
     name: string;
@@ -48,6 +50,7 @@ export const getDefaultSettingsFormData = (): SettingsFormData => ({
     autoLowerLimit: 100,
     autoUpperLimit: 3200,
     sensitivityStep: '1 EV',
+    autoIsoSlowestShutter: '1/125 s',
   },
   exposure: {
     aperture: 'f/2.8',

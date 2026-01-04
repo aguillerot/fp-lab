@@ -30,7 +30,7 @@ export type CameraSettings = {
   autoIsoLowerLimit: IsoSensitivityWithoutAuto;
   autoIsoUpperLimit: IsoSensitivityWithoutAuto;
   autoIsoSlowestShutterMode: AutoIsoSlowestShutterMode;
-  autoIsoSlowestShutterLimit: number;
+  autoIsoSlowestShutterLimit: ShutterSpeed;
   shootingModeName: string;
   shootingModeIcon: string;
   shootingMode: ShootingMode;

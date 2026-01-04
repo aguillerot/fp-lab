@@ -5,6 +5,7 @@ import {
   autoAndAllIsoSensitivityOptions,
   highIsoSensitivityOptions,
   lowIsoSensitivityOptions,
+  slowestIsoShutterSpeedOptions,
 } from 'fp-shared/constants';
 import { IsoSensitivity } from 'fp-shared/models';
 import { SelectItem } from 'primeng/api';
@@ -35,6 +36,7 @@ export class IsoSettingsComponent {
   });
   protected readonly autoIsoLowerLimitOptions = allIsoSensitivityOptions;
   protected readonly autoIsoUpperLimitOptions = allIsoSensitivityOptions;
+  protected readonly slowestIsoShutterSpeedOptions = slowestIsoShutterSpeedOptions;
 
   constructor() {
     effect(() => {

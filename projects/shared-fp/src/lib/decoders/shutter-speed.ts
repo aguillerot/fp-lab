@@ -1,5 +1,5 @@
-import { SHUTTER_SPEED_FRACTIONS } from '../constants/shutter-speed.constants';
-import { ShutterSpeed } from '../models/shutter-speed.model';
+import { SHUTTER_SPEED_FRACTIONS } from 'fp-shared/constants';
+import { ShutterSpeed } from 'fp-shared/models';
 
 /**
  * Shutter Speed Decoder/Encoder

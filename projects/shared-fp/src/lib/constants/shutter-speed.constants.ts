@@ -1,6 +1,5 @@
-import { ShutterSpeed } from 'fp-shared/models';
-
 import { Fraction } from 'fraction.js';
+import { ShutterSpeed } from '../models/shutter-speed.model';
 
 /**
  * Mapping of ShutterSpeed display values to their exact fractional values.
@@ -132,3 +131,7 @@ export const standardShutterSpeedOptions: ShutterSpeed[] = [
   '1/6000 s',
   '1/8000 s',
 ];
+
+export function isShutterSpeed(value: unknown): value is ShutterSpeed {
+  return typeof value === 'string' && value in SHUTTER_SPEED_FRACTIONS;
+}

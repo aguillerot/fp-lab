@@ -2,7 +2,7 @@ import { ChangeDetectionStrategy, Component, computed, effect, inject, input, si
 import { FormsModule } from '@angular/forms';
 import { form } from '@angular/forms/signals';
 import { RouterLink } from '@angular/router';
-import { IsoMode, StoredCameraSettings } from 'fp-shared/models';
+import { isAutoIsoSlowestShutterMode, IsoMode, StoredCameraSettings } from 'fp-shared/models';
 import { CameraProtocolService } from 'fp-shared/services';
 import { MenuItem } from 'primeng/api';
 import { Breadcrumb } from 'primeng/breadcrumb';
@@ -71,6 +71,10 @@ export class SettingsDetail {
           autoLowerLimit: settings.autoIsoLowerLimit,
           autoUpperLimit: settings.autoIsoUpperLimit,
           sensitivityStep: settings.isoStep,
+          autoIsoSlowestShutter:
+            settings.autoIsoSlowestShutterMode === 'Manual'
+              ? settings.autoIsoSlowestShutterLimit
+              : settings.autoIsoSlowestShutterMode,
         },
         exposure: {
           aperture: settings.aperture,
@@ -115,6 +119,14 @@ export class SettingsDetail {
     settings.autoIsoLowerLimit = formValue.iso.autoLowerLimit;
     settings.autoIsoUpperLimit = formValue.iso.autoUpperLimit;
     settings.isoStep = formValue.iso.sensitivityStep;
+
+    const autoIsoSlowestShutter = formValue.iso.autoIsoSlowestShutter;
+    if (isAutoIsoSlowestShutterMode(autoIsoSlowestShutter)) {
+      settings.autoIsoSlowestShutterMode = autoIsoSlowestShutter;
+    } else {
+      settings.autoIsoSlowestShutterMode = 'Manual';
+      settings.autoIsoSlowestShutterLimit = autoIsoSlowestShutter;
+    }
     settings.exposureCompensation = formValue.exposure.compensation;
     settings.aeMeteringMode = formValue.exposure.aeMeteringMode;
     settings.driveMode = formValue.drive.mode;
