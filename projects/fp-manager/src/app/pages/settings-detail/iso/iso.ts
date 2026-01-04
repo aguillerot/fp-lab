@@ -1,17 +1,18 @@
 import { Component, computed, effect, input, untracked } from '@angular/core';
 import { Field, FieldTree } from '@angular/forms/signals';
+import {
+  allIsoSensitivityOptions,
+  autoAndAllIsoSensitivityOptions,
+  highIsoSensitivityOptions,
+  lowIsoSensitivityOptions,
+  slowestIsoShutterSpeedOptions,
+} from 'fp-shared/constants';
+import { IsoSensitivity } from 'fp-shared/models';
 import { SelectItem } from 'primeng/api';
 import { Card } from 'primeng/card';
 import { Divider } from 'primeng/divider';
 import { Select } from 'primeng/select';
 import { SelectButton } from 'primeng/selectbutton';
-import {
-  allIsoSensitivityOptions,
-  autoAndAllIsoSensitivityOptions,
-  highIsoSensitivityOptions,
-  IsoSensitivity,
-  lowIsoSensitivityOptions,
-} from 'shared-fp';
 import { IsoSettingsFormData } from '../settings-detail.model';
 
 @Component({
@@ -35,6 +36,7 @@ export class IsoSettingsComponent {
   });
   protected readonly autoIsoLowerLimitOptions = allIsoSensitivityOptions;
   protected readonly autoIsoUpperLimitOptions = allIsoSensitivityOptions;
+  protected readonly slowestIsoShutterSpeedOptions = slowestIsoShutterSpeedOptions;
 
   constructor() {
     effect(() => {

@@ -1,49 +1,80 @@
 <p-toast />
+<lib-scan-dialog [(visible)]="scanDialogVisible" (qrCodeScanned)="handleQrCodeScanned($event)"></lib-scan-dialog>
+<app-qr-display-dialog
+  #qrDisplayDialog
+  [(visible)]="qrDisplayDialogVisible"
+  [qrCodeData]="selectedQrCodeData()"
+></app-qr-display-dialog>
+
 @if (isEmpty()) {
 <!-- Empty State -->
-<div class="empty-state">
-  <span class="pi pi-qrcode empty-icon"></span>
+<div class="flex flex-col items-center text-center py-16 px-6">
   <h2>No saved settings</h2>
-  <p>Scan a QR code from your Sigma FP camera to save and manage your shooting settings.</p>
   <p-button label="Scan QR Code" icon="pi pi-qrcode" (onClick)="openScanDialog()" />
 </div>
 } @else {
 <!-- Settings List -->
-<div class="header">
+<div class="flex justify-between items-center mb-4">
   <h2>Saved Settings</h2>
   <p-button icon="pi pi-qrcode" (onClick)="openScanDialog()" rounded aria-label="Scan QR Code" />
 </div>
 
 <p-card>
-  <ul class="settings-list">
-    @for (item of decodedSettings(); track item.id) {
-    <li
-      class="settings-item"
-      tabindex="0"
-      role="button"
-      (click)="openSettings(item)"
-      (keydown.enter)="openSettings(item)"
-      (keydown.space)="openSettings(item)"
-    >
-      <div class="mode-badge">{{ item.decoded.shootingMode }}</div>
-      <div class="settings-info">
-        <span class="settings-title"> {{ item.decoded.shootingModeName || 'Untitled Preset' }} </span>
-        <span class="settings-subtitle">
-          @if (item.decoded.shootingModeIcon) { {{ item.decoded.shootingModeIcon }} · } {{ item.scannedAt | date: 'MMM
-          d, y' }}
-        </span>
-      </div>
-      <p-button
-        icon="pi pi-trash"
-        severity="danger"
-        text
-        rounded
-        (onClick)="deleteSettings($event, item)"
-        aria-label="Delete"
-      />
-    </li>
-    }
-  </ul>
+  <p-table [value]="decodedSettings()" [rowHover]="true" size="small">
+    <ng-template pTemplate="body" let-item>
+      <tr
+        class="cursor-pointer hover:bg-surface-100 dark:hover:bg-surface-800 transition-colors duration-200"
+        (click)="openSettings(item)"
+        tabindex="0"
+        (keydown.enter)="openSettings(item)"
+        (keydown.space)="openSettings(item)"
+      >
+        <td class="w-16 p-3">
+          <div
+            class="w-10 h-10 rounded-lg flex items-center justify-center font-bold bg-cyan-500/15 text-cyan-500 shrink-0"
+          >
+            {{ item.decoded.shootingMode }}
+          </div>
+        </td>
+        <td class="p-3">
+          <div class="flex flex-col">
+            <span class="font-medium text-lg">{{ item.decoded.shootingModeName || 'Untitled Preset' }}</span>
+            <span class="text-sm text-surface-500 dark:text-surface-400">
+              @if (item.decoded.shootingModeIcon) { {{ item.decoded.shootingModeIcon }} · } {{ item.scannedAt | date:
+              'MMM d, y' }}
+            </span>
+          </div>
+        </td>
+        <td class="w-32 p-3 text-right">
+          <div class="flex gap-2 justify-end">
+            <p-button
+              icon="pi pi-qrcode"
+              severity="secondary"
+              text
+              rounded
+              (onClick)="showQrCode($event, item)"
+              aria-label="Show QR Code"
+            />
+            <p-button
+              icon="pi pi-copy"
+              severity="secondary"
+              text
+              rounded
+              (onClick)="duplicateSettings($event, item)"
+              aria-label="Duplicate"
+            />
+            <p-button
+              icon="pi pi-trash"
+              severity="danger"
+              text
+              rounded
+              (onClick)="deleteSettings($event, item)"
+              aria-label="Delete"
+            />
+          </div>
+        </td>
+      </tr>
+    </ng-template>
+  </p-table>
 </p-card>
 }
-<lib-scan-dialog [(visible)]="scanDialogVisible" (qrCodeScanned)="handleQrCodeScanned($event)"></lib-scan-dialog>

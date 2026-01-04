@@ -1,8 +1,8 @@
 import { Component, input } from '@angular/core';
 import { Field, FieldTree } from '@angular/forms/signals';
+import { driveModeOptions } from 'fp-shared/constants';
 import { Card } from 'primeng/card';
 import { Select } from 'primeng/select';
-import { driveModeOptions } from 'shared-fp';
 import { DriveSettingsFormData } from '../settings-detail.model';
 
 @Component({

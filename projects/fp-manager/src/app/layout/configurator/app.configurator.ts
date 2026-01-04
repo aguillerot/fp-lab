@@ -3,9 +3,9 @@ import { Component, computed, inject, OnInit, PLATFORM_ID, signal } from '@angul
 import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
 import { $t, updatePreset, updateSurfacePalette } from '@primeuix/themes';
+import { isNil } from 'fp-shared/utils';
 import { PrimeNG } from 'primeng/config';
 import { SelectButton } from 'primeng/selectbutton';
-import { isNil } from 'shared-fp';
 import { LayoutService } from '../layout.service';
 import { colors, menuModeOptions, presets, surfaces } from './configurator.constants';
 import { KeyOfType, SurfacesType } from './configurator.model';

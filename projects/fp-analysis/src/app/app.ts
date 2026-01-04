@@ -1,6 +1,8 @@
 import { ChangeDetectionStrategy, Component, inject, signal } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { Field, form, required } from '@angular/forms/signals';
+import { ScanDialog } from 'fp-shared/components';
+import { BytesToHexPipe, HexAtIndexesPipe } from 'fp-shared/pipes';
 import { MessageService } from 'primeng/api';
 import { Button } from 'primeng/button';
 import { Card } from 'primeng/card';
@@ -10,7 +12,6 @@ import { InputText } from 'primeng/inputtext';
 import { Message } from 'primeng/message';
 import { TableModule } from 'primeng/table';
 import { Toast } from 'primeng/toast';
-import { BytesToHexPipe, HexAtIndexesPipe, ScanDialog } from 'shared-fp';
 import { QrAnalysisService } from './services/qr-analysis.service';
 
 @Component({

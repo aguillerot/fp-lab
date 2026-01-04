@@ -1,19 +1,22 @@
 import { DatePipe } from '@angular/common';
 import { ChangeDetectionStrategy, Component, computed, inject, signal } from '@angular/core';
 import { Router } from '@angular/router';
+import { ScanDialog } from 'fp-shared/components';
+import { StoredCameraSettings } from 'fp-shared/models';
+import { CameraProtocolService } from 'fp-shared/services';
 import { MessageService } from 'primeng/api';
 import { Button } from 'primeng/button';
 import { Card } from 'primeng/card';
+import { TableModule } from 'primeng/table';
 import { Toast } from 'primeng/toast';
-import { CameraProtocolService, ScanDialog, StoredCameraSettings } from 'shared-fp';
+import { QrDisplayDialog } from '../../components/qr-display-dialog/qr-display-dialog';
 import { SettingsStorageService } from '../../services/settings-storage.service';
 
 @Component({
   selector: 'app-home',
   standalone: true,
-  imports: [ScanDialog, Toast, Card, Button, DatePipe],
+  imports: [ScanDialog, Toast, Card, Button, TableModule, DatePipe, QrDisplayDialog],
   templateUrl: './home.html',
-  styleUrl: './home.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
   providers: [MessageService],
 })
@@ -23,6 +26,8 @@ export class Home {
   private readonly cameraProtocol = inject(CameraProtocolService);
   private readonly messageService = inject(MessageService);
   protected readonly scanDialogVisible = signal<boolean>(false);
+  protected readonly selectedQrCodeData = signal<number[] | null>(null);
+  protected readonly qrDisplayDialogVisible = signal<boolean>(false);
 
   readonly storedSettings = this.settingsStorage.storedSettings;
   readonly isEmpty = this.settingsStorage.isEmpty;
@@ -66,6 +71,17 @@ export class Home {
     this.router.navigate(['/settings', item.id]);
   }
 
+  duplicateSettings(event: Event, item: StoredCameraSettings): void {
+    event.stopPropagation();
+    this.settingsStorage.duplicate(item.id);
+    this.messageService.add({
+      severity: 'success',
+      summary: 'Duplicated',
+      detail: 'Settings duplicated',
+      life: 2000,
+    });
+  }
+
   deleteSettings(event: Event, item: StoredCameraSettings): void {
     event.stopPropagation();
     this.settingsStorage.remove(item.id);
@@ -75,5 +91,11 @@ export class Home {
       detail: 'Settings deleted',
       life: 2000,
     });
+  }
+
+  showQrCode(event: Event, item: StoredCameraSettings): void {
+    event.stopPropagation();
+    this.selectedQrCodeData.set(Array.from(item.qrCodeData));
+    this.qrDisplayDialogVisible.set(true);
   }
 }

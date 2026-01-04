@@ -19,12 +19,12 @@
       />
     </div>
     <div class="flex items-center justify-between gap-2 min-h-8">
-      <span>Shutter Speed</span>
-      <i class="pi pi-exclamation-triangle" style="font-size: 1.5rem"></i>
+      <label for="shutterSpeed">Shutter Speed</label>
+      <p-select id="shutterSpeed" class="min-w-40" [options]="shutterSpeedOptions" [field]="fieldTree().shutterSpeed" />
     </div>
     <div class="flex items-center justify-between gap-2 min-h-8">
-      <span>Aperture</span>
-      <i class="pi pi-exclamation-triangle" style="font-size: 1.5rem"></i>
+      <label for="aperture">Aperture</label>
+      <p-select id="aperture" class="min-w-40" [options]="apertureOptions" [field]="fieldTree().aperture" />
     </div>
     <div class="flex items-center justify-between gap-2 min-h-8">
       <label for="exposureCompensation">Compensation: {{fieldTree().compensation().value()}}</label>

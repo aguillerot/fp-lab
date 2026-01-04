@@ -1,5 +1,29 @@
+/**
+ * Exposure Compensation Decoder/Encoder
+ *
+ * Photography Background:
+ * - Exposure compensation adjusts the camera's metered exposure
+ * - Measured in EV (Exposure Value) units, also called "stops"
+ * - +1 EV = 2× more light (1 stop brighter)
+ * - -1 EV = ½ light (1 stop darker)
+ * - Typical range: -5 to +5 EV
+ *
+ * 1/3 Stop Increments:
+ * - 0.0, ±0.3, ±0.7, ±1.0, ±1.3, ±1.7, ±2.0...
+ * - Note: 0.3 and 0.7 are rounded displays of 1/3 and 2/3
+ *
+ * Encoding:
+ * - Byte 119: Integer part + index offset (119)
+ * - Byte 118: Fractional part encoded as steps × 85
+ *   - step 0 (0.0): 118
+ *   - step 1 (0.3): 203 (118 + 85)
+ *   - step 2 (0.7): 32  (118 + 170) % 256
+ */
+
 const INDEX_118 = 118;
 const INDEX_119 = 119;
+
+/** Step increment for 1/3 stop (256 / 3 ≈ 85.33, rounded to 85) */
 const STEP_INCREMENT = 85;
 
 export function decodeExposureCompensation(data: Uint8Array): number {

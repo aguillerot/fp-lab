@@ -56,4 +56,15 @@ export type IsoSensitivityWithoutAuto = Exclude<IsoSensitivity, 'auto'>;
 
 export type IsoStep = '1/3 EV' | '1 EV';
 
-export type AutoIsoSlowestShutterMode = 'manual' | 'auto Faster' | 'auto Fast' | 'auto' | 'auto Slow' | 'auto Slower';
+export type AutoIsoSlowestShutterMode = 'Manual' | 'Auto Faster' | 'Auto Fast' | 'Auto' | 'Auto Slow' | 'Auto Slower';
+
+export function isAutoIsoSlowestShutterMode(value: unknown): value is AutoIsoSlowestShutterMode {
+  return (
+    value === 'Manual' ||
+    value === 'Auto Faster' ||
+    value === 'Auto Fast' ||
+    value === 'Auto' ||
+    value === 'Auto Slow' ||
+    value === 'Auto Slower'
+  );
+}

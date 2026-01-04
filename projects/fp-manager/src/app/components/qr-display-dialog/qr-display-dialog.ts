@@ -4,11 +4,13 @@ import {
   computed,
   effect,
   ElementRef,
+  inject,
   input,
+  model,
   signal,
   viewChild,
 } from '@angular/core';
-import { Button } from 'primeng/button';
+import { CameraProtocolService } from 'fp-shared/services';
 import { Dialog } from 'primeng/dialog';
 import { ProgressSpinner } from 'primeng/progressspinner';
 import QRCode from 'qrcode';
@@ -16,16 +18,16 @@ import QRCode from 'qrcode';
 @Component({
   selector: 'app-qr-display-dialog',
   standalone: true,
-  imports: [Dialog, Button, ProgressSpinner],
+  imports: [Dialog, ProgressSpinner],
   templateUrl: './qr-display-dialog.html',
   styleUrl: './qr-display-dialog.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class QrDisplayDialog {
-  readonly title = input<string>('QR Code');
-  readonly qrCodeData = input<number[] | null>(null);
+  protected protocolService = inject(CameraProtocolService);
+  public readonly qrCodeData = input<number[] | null>(null);
 
-  protected readonly visible = signal(false);
+  public readonly visible = model<boolean>(false);
   protected readonly isLoading = signal(false);
   protected readonly errorMessage = signal<string | null>(null);
 
@@ -34,6 +36,11 @@ export class QrDisplayDialog {
   protected readonly hasData = computed(() => {
     const data = this.qrCodeData();
     return data !== null && data.length > 0;
+  });
+
+  protected readonly title = computed(() => {
+    const data = this.qrCodeData();
+    return data ? this.protocolService.decode(new Uint8Array(data)).shootingModeName : 'QR Code';
   });
 
   constructor() {
@@ -46,15 +53,6 @@ export class QrDisplayDialog {
         this.generateQrCode(data, canvas.nativeElement);
       }
     });
-  }
-
-  open() {
-    this.visible.set(true);
-    this.errorMessage.set(null);
-  }
-
-  close() {
-    this.visible.set(false);
   }
 
   private async generateQrCode(data: number[], canvas: HTMLCanvasElement): Promise<void> {

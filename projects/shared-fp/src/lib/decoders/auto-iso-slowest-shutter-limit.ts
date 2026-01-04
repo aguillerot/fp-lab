@@ -1,10 +1,37 @@
+/**
+ * Auto ISO Slowest Shutter Speed Limit Decoder/Encoder
+ *
+ * Photography Background:
+ * - Shutter speed follows a reciprocal doubling pattern
+ * - Full stops: 1s → 1/2 → 1/4 → 1/8 → 1/15 → 1/30 → 1/60 → 1/125...
+ * - Each halving of time = 1 stop less light
+ * - Note: Some values are rounded (1/15 not 1/16, 1/125 not 1/128)
+ *
+ * APEX Time Value (Tv):
+ * - Tv = -log₂(t) where t is exposure time in seconds
+ * - Tv = 0 → 1s, Tv = 1 → 1/2s, Tv = 5 → 1/30s, Tv = 6 → 1/60s
+ * - Tv increases as shutter speed gets faster
+ *
+ * Encoding:
+ * - Uses: internalVal = Tv × 256
+ * - Each 256 units = 1 stop (halving of exposure time)
+ * - Each ~85 units = 1/3 stop
+ * - Bytes 129-130 with "Golden Rule" offset
+ */
+
+import { SHUTTER_SPEED_FRACTIONS } from 'fp-shared/constants';
+import { ShutterSpeed } from 'fp-shared/models';
+
 const INDEX_129 = 129;
 const INDEX_130 = 130;
 
-export function decodeAutoIsoSlowestShutterLimit(data: Uint8Array): number {
+/** Units per stop in the internal encoding (256 = 1 Tv) */
+const UNITS_PER_STOP = 256;
+
+export function decodeAutoIsoSlowestShutterLimit(data: Uint8Array): ShutterSpeed {
   if (data.length <= INDEX_130) {
     console.warn('Buffer too short for Auto ISO Slowest Shutter Limit');
-    return 1 / 30; // Default fallback
+    return '1/125 s'; // Default fallback
   }
 
   const b129 = data[INDEX_129];
@@ -17,79 +44,60 @@ export function decodeAutoIsoSlowestShutterLimit(data: Uint8Array): number {
   // 2. Reconstruct internal value
   const internalVal = (highRaw << 8) | lowRaw;
 
-  // 3. APEX Formula: Internal = Tv * 256
-  // Tv = -log2(Time)
-  // Internal = -log2(Time) * 256
-  // Time = 2^(-Internal / 256)
-  const seconds = Math.pow(2, -internalVal / 256);
+  // Logarithmic formula using APEX Tv (Time Value):
+  // internalVal = Tv × 256 = -log₂(t) × 256
+  // Therefore: t = 2^(-internalVal / 256)
+  //
+  // Examples:
+  // internalVal = 0    → 1s (2^0)
+  // internalVal = 256  → 1/2s (2^-1)
+  // internalVal = 768  → 1/8s (2^-3)
+  const seconds = Math.pow(2, -internalVal / UNITS_PER_STOP);
 
   return snapToStandardShutterSpeed(seconds);
 }
 
-export function encodeAutoIsoSlowestShutterLimit(seconds: number, data: Uint8Array): void {
+export function encodeAutoIsoSlowestShutterLimit(shutterSpeed: ShutterSpeed, data: Uint8Array): void {
   if (data.length <= INDEX_130) {
     console.warn('Buffer too short for Auto ISO Slowest Shutter Limit');
     return;
   }
 
-  // APEX Formula: Internal = -log2(Time) * 256
-  const tv = -Math.log2(seconds);
-  const internalVal = Math.round(tv * 256);
+  const fraction = SHUTTER_SPEED_FRACTIONS[shutterSpeed];
+  if (!fraction) {
+    console.warn(`Unknown shutter speed value: ${shutterSpeed}`);
+    return;
+  }
 
-  // Split bytes
-  const lowByteRaw = internalVal & 0xff;
-  const highByteRaw = (internalVal >> 8) & 0xff;
+  // Calculate internal value using the formula:
+  // internalVal = 256 * log2(1/t)
+  // Rounding logic:
+  // - For fast speeds (t < 1s, val > 0): Use floor
+  // - For slow speeds (t >= 1s, val <= 0): Use round(val - 0.25)
+  const seconds = fraction.valueOf();
+  const rawVal = 256 * Math.log2(1 / seconds);
+  const internalVal = rawVal > 0 ? Math.floor(rawVal) : Math.round(rawVal - 0.25);
 
-  // Apply Golden Rule
-  data[INDEX_129] = (lowByteRaw + 129) & 0xff;
-  data[INDEX_130] = (highByteRaw + 130) & 0xff;
+  // Split into high and low bytes
+  const lowRaw = internalVal & 0xff;
+  const highRaw = (internalVal >> 8) & 0xff;
+
+  // Apply "Golden Rule" - add index offset
+  data[INDEX_129] = (lowRaw + INDEX_129) & 0xff;
+  data[INDEX_130] = (highRaw + INDEX_130) & 0xff;
 }
 
-function snapToStandardShutterSpeed(value: number): number {
-  // List of standard shutter speeds in seconds
-  // Note: 0.6 is approx 2/3s, 0.3 is approx 1/3s
-  const standardSpeeds = [
-    1,
-    0.8,
-    2 / 3, // ~0.666 (User's 0.6)
-    0.5,
-    0.4,
-    1 / 3, // ~0.333 (User's 0.3)
-    1 / 4,
-    1 / 5,
-    1 / 6,
-    1 / 8,
-    1 / 10,
-    1 / 13,
-    1 / 15,
-    1 / 20,
-    1 / 25,
-    1 / 30,
-    1 / 40,
-    1 / 50,
-    1 / 60,
-    1 / 80,
-    1 / 100,
-    1 / 125,
-    1 / 160,
-    1 / 200,
-    1 / 250,
-    1 / 320,
-    1 / 400,
-    1 / 500,
-    1 / 640,
-    1 / 800,
-    1 / 1000,
-    1 / 1250,
-    1 / 1600,
-    1 / 2000,
-    1 / 2500,
-    1 / 3200,
-    1 / 4000,
-    1 / 5000,
-    1 / 6400,
-    1 / 8000,
-  ];
-
-  return standardSpeeds.reduce((prev, curr) => (Math.abs(curr - value) < Math.abs(prev - value) ? curr : prev));
+/**
+ * Snaps a calculated shutter speed value to the nearest standard value.
+ */
+function snapToStandardShutterSpeed(seconds: number): ShutterSpeed {
+  const speeds = Object.keys(SHUTTER_SPEED_FRACTIONS) as ShutterSpeed[];
+  return speeds.reduce((prev, curr) => {
+    const prevSeconds = SHUTTER_SPEED_FRACTIONS[prev].valueOf();
+    const currSeconds = SHUTTER_SPEED_FRACTIONS[curr].valueOf();
+    // Compare in log space for better accuracy across the range
+    const prevDiff = Math.abs(Math.log2(prevSeconds) - Math.log2(seconds));
+    const currDiff = Math.abs(Math.log2(currSeconds) - Math.log2(seconds));
+    return currDiff < prevDiff ? curr : prev;
+  });
 }
