@@ -1,31 +1,13 @@
 <p-card>
   <ng-template #title>White Balance</ng-template>
-  <div class="flex flex-col gap-2">
+  <div class="flex flex-col gap-4">
     <div class="flex items-center justify-between gap-2 min-h-8">
       <label for="whiteBalanceMode">Mode</label>
       <p-select id="whiteBalanceMode" class="min-w-40" [options]="whiteBalanceModeOptions" [field]="fieldTree().mode" />
     </div>
-    <div class="flex items-center justify-between gap-2 min-h-8">
-      <label for="whiteBalanceShiftBA">Shift {{fieldTree().shiftBA().value() | whiteBalanceShiftBA}}</label>
-      <p-slider
-        id="whiteBalanceShiftBA"
-        class="min-w-40"
-        [min]="-16"
-        [max]="16"
-        [step]="2"
-        [field]="fieldTree().shiftBA"
-      />
-    </div>
-    <div class="flex items-center justify-between gap-2 min-h-8">
-      <label for="whiteBalanceShiftMG">Shift {{fieldTree().shiftMG().value() | whiteBalanceShiftMG}}</label>
-      <p-slider
-        id="whiteBalanceShiftMG"
-        class="min-w-40"
-        [min]="-16"
-        [max]="16"
-        [step]="2"
-        [field]="fieldTree().shiftMG"
-      />
+
+    <div class="flex justify-center">
+      <app-white-balance-grid [ba]="fieldTree().shiftBA" [mg]="fieldTree().shiftMG" />
     </div>
   </div>
 </p-card>

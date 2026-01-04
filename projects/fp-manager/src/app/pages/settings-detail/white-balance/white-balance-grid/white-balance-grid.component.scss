@@ -1,0 +1,137 @@
+.grid-wrapper {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1rem;
+  padding: 2rem; // More padding for labels
+}
+
+.grid-container {
+  position: relative;
+  width: 240px;
+  height: 240px;
+  background-color: #000;
+  border: 2px solid #000;
+  cursor: crosshair;
+  user-select: none;
+  outline: none;
+
+  &:focus-visible {
+    border-color: var(--p-primary-color);
+    box-shadow: 0 0 0 2px var(--p-primary-color);
+  }
+}
+
+.grid-background {
+  position: absolute;
+  inset: 0;
+
+  // Gradients to match Sigma FP style
+  background: 
+    // Center white glow
+    radial-gradient(circle, #ffffff 0%, transparent 70%),
+    // Conic color wheel
+    conic-gradient(
+        from 0deg,
+        #00ff00 0deg,
+        // Top: Green
+        #ffff00 45deg,
+        // TR: Yellow
+        #ffaa00 90deg,
+        // Right: Amber
+        #ff0000 135deg,
+        // BR: Red
+        #ff00ff 180deg,
+        // Bottom: Magenta
+        #0000aa 225deg,
+        // BL: Dark Blue
+        #0000ff 270deg,
+        // Left: Blue
+        #00ffff 315deg,
+        // TL: Cyan
+        #00ff00 360deg // Top: Green
+      );
+}
+
+.grid-background::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background-image:
+    linear-gradient(rgb(0 0 0 / 30%) 1px, transparent 1px),
+    linear-gradient(90deg, rgb(0 0 0 / 30%) 1px, transparent 1px);
+
+  // 16 steps total (step 2). 100% / 16 = 6.25%
+  background-size: 6.25% 6.25%;
+}
+
+.axis {
+  position: absolute;
+  background-color: #000;
+  opacity: 0.8;
+  z-index: 1;
+}
+
+.x-axis {
+  top: 50%;
+  left: 0;
+  right: 0;
+  height: 2px;
+  transform: translateY(-50%);
+}
+
+.y-axis {
+  left: 50%;
+  top: 0;
+  bottom: 0;
+  width: 2px;
+  transform: translateX(-50%);
+}
+
+.label {
+  position: absolute;
+  font-size: 1.2rem;
+  font-weight: bold;
+  color: var(--p-text-color);
+  pointer-events: none;
+  text-shadow: 0 1px 2px rgb(0 0 0 / 80%);
+  white-space: nowrap;
+}
+
+// Position labels outside the grid
+.label-top {
+  top: -2rem;
+  left: 50%;
+  transform: translateX(-50%);
+}
+
+.label-bottom {
+  bottom: -2rem;
+  left: 50%;
+  transform: translateX(-50%);
+}
+
+.label-left {
+  left: -3rem;
+  top: 50%;
+  transform: translateY(-50%) rotate(-90deg);
+}
+
+.label-right {
+  right: -3rem;
+  top: 50%;
+  transform: translateY(-50%) rotate(90deg);
+}
+
+.pointer {
+  position: absolute;
+  width: 12px;
+  height: 12px;
+  background-color: #fff;
+  border: 2px solid #000;
+  border-radius: 50%;
+  transform: translate(-50%, 50%); // Bottom-left origin for position, center for pointer
+  box-shadow: 0 0 4px rgb(0 0 0 / 50%);
+  pointer-events: none;
+  z-index: 2;
+}
