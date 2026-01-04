@@ -1,0 +1,15 @@
+<div class="grid-wrapper">
+  <div class="grid-container" #container tabindex="0" (mousedown)="onMouseDown($event)" (keydown)="onKeyDown($event)">
+    <div class="grid-background">
+      <div class="axis x-axis"></div>
+      <div class="axis y-axis"></div>
+    </div>
+
+    <div class="label label-top">G {{ gValue() }}</div>
+    <div class="label label-bottom">M {{ mValue() }}</div>
+    <div class="label label-left">B {{ bValue() }}</div>
+    <div class="label label-right">A {{ aValue() }}</div>
+
+    <div class="pointer" [style]="pointerStyle()"></div>
+  </div>
+</div>
